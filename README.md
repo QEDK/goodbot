@@ -11,6 +11,7 @@ Travis checks linting automatically for all commits.
 W191 ignored - Use tabs instead of spaces
 E117 ignored - Over-indented allowed as a consequence of W191
 E501 ignored - No line-length limit as chatbot responses are long
+
 ### Consequently (have to be followed):
 
 * E123 - closing bracket should match indentation of opening bracket's line
