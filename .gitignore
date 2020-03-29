@@ -1,0 +1,10 @@
+# venv
+bin
+lib
+share
+*.Python
+*.cfg
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.7"
+# before_install: build config file in Travis for testing
+  # echo -e "[api]\nemail=good-bot@zulipchat.com\nkey=$API_KEY\nsite=https://wikimedia.zulipchat.com" >> ~/goodbot
+  # testing bot: - echo -e "[api]\nemail=good-bot-test@zulipchat.com\nkey=$API_KEY2\nsite=https://wikimedia.zulipchat.com" >> ~/good-testbot
+install:
+  - pip3 install -r requirements.txt
+script:
+  - flake8 --ignore=W191,E117,E501 bot/bot.py # for now have linting enforce checks
