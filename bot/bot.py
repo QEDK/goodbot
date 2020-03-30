@@ -145,7 +145,14 @@ class goodbot(object):
 							"to": destination,
 							"content": "Hey @**" + sender_full_name + "** Got it! :point_down:\n" + response
 						})
-				if content[1].lower() == "chat": # add error control later
+				if content[1].lower() == "chat":
+					if(len(content) == 2):  # bunch all error control into one
+						self.client.send_message({
+							"type": "stream",
+							"subject": message_type,
+							"to": destination,
+							"content": "Hey @**" + sender_full_name + "** Please specify your required assistance in the following format:\n* `!help chat mediawiki` for assistance with MediaWiki software.\n* `!help chat wikimedia` for assistance with technical issues related to Wikimedia projects."
+						})
 					if(content[2].lower() == "wikimedia"):
 						self.client.send_message({
 							"type": "stream",
