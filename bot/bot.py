@@ -145,6 +145,21 @@ class goodbot(object):
 							"to": destination,
 							"content": "Hey @**" + sender_full_name + "** Got it! :point_down:\n" + response
 						})
+				if content[1].lower() == "chat": # add error control later
+					if(content[2].lower() == "wikimedia"):
+						self.client.send_message({
+							"type": "stream",
+							"subject": message_type,
+							"to": destination,
+							"content": "Hey @**" + sender_full_name + "** You can get help at the [#wikimedia-tech](https://webchat.freenode.net/?channels=wikimedia-tech) IRC channel. You can also request assistance on [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org)"
+						})
+					if(content[2].lower() == "mediawiki"):
+						self.client.send_message({
+							"type": "stream",
+							"subject": message_type,
+							"to": destination,
+							"content": "Hey @**" + sender_full_name + "** You can get help at the [#mediawiki](https://webchat.freenode.net/?channels=mediawiki) IRC channel. You can also request assistance on [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org) You can see a full list of available channels [here](https://meta.wikimedia.org/wiki/IRC/Channels#MediaWiki_and_technical)"
+						})
 		elif "goodbot" in content and content[0] != "!help":
 			self.client.send_message({
 				"type": "stream",
