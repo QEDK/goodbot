@@ -13,8 +13,8 @@ class goodbot(object):
 		print("Bot init complete")
 
 	def subscribe_all(self):
-		json = self.client.get_streams()["streams"]
-		streams = [{"name": stream["name"]} for stream in json]
+		allstreams = self.client.get_streams()["streams"]
+		streams = [{"name": stream["name"]} for stream in allstreams]
 		self.client.add_subscriptions(streams)
 		print("Subscription complete")
 
@@ -26,17 +26,14 @@ class goodbot(object):
 		sender_full_name = msg["sender_full_name"]
 		message_type = msg["type"]  # "stream" or "private"
 		if message_type == "stream":
-			destination = msg["display_recipient"]  # destination is PM
+			destination = msg["display_recipient"]  # destination is stream
 		else:
 			destination = sender_email  # destination is PM
 		topic = msg["subject"]  # topic legacy naming in API
 
-		print(content)
+		print(content + "\nSucessfully heard.")
 
-		print("Sucessfully heard.")
-		print(msg["content"])
-
-		if "just signed up for" in msg["content"]:
+		if "just signed up for" in msg["content"]:  # hack for reading #announce stream
 			self.client.send_message({
 				"type": message_type,
 				"topic": topic,
@@ -83,56 +80,71 @@ class goodbot(object):
 							"content": "Hello @**" + sender_full_name + "** ! In all our projects, we list the level of expertise and skills required. Although you can choose to share your skillset with organization administrators, all they might be able to do is point you to the list of projects you might have seen already on MediaWiki.org. It might be ideal if you assess for yourself which project best suits you based on the skills required, level of expertise needed and any topic area that interests you more. And, this would save everyone some time!"
 						})
 				if content[1].lower() == "wikipedia":
-					self.client.send_message({
-						"type": message_type,
-						"topic": topic,
-						"to": destination,
-						"content": "Hello @**" + sender_full_name + "** ! This might take a while to process :time_ticking:"
-					})
-					query = ' '.join(content[2:])
-					self.client.send_message({
-						"type": message_type,
-						"topic": topic,
-						"to": destination,
-						"content": "Hey @**" + sender_full_name + "** Got it! :point_right: " + wikipedia.summary(query, sentences=2) + "\n"
-					})
-					response = ""
-					for result in wikipedia.search(query, results=1):
-						page = wikipedia.page(result)
-						response += ("* [" + page.title + "](" + page.url + ")\n")
-					self.client.send_message({
-						"type": "stream",
-						"topic": topic,
-						"to": destination,
-						"content": response
-					})
+					if(len(content) == 2):
+						self.client.send_message({
+							"type": message_type,
+							"topic": topic,
+							"to": destination,
+							"content": "Hello @**" + sender_full_name + "** ! You can make me search Wikipedia by adding the query after the command: `!help wikipedia 'your query'`"
+						})
+					else:
+						self.client.send_message({
+							"type": message_type,
+							"topic": topic,
+							"to": destination,
+							"content": "Hello @**" + sender_full_name + "** ! This might take a while to process :time_ticking:"
+						})
+						query = ' '.join(content[2:])
+						self.client.send_message({
+							"type": message_type,
+							"topic": topic,
+							"to": destination,
+							"content": "Hey @**" + sender_full_name + "** Got it! :point_right: " + wikipedia.summary(query, sentences=2) + "\n"  # summary is a very slow call
+						})
+						response = ""
+						for result in wikipedia.search(query, results=1):
+							page = wikipedia.page(result)
+							response += ("* [" + page.title + "](" + page.url + ")\n")
+						self.client.send_message({
+							"type": "stream",
+							"topic": topic,
+							"to": destination,
+							"content": response
+						})
 				if content[1].lower() == "stackoverflow":
-					self.client.send_message({
-						"type": message_type,
-						"topic": topic,
-						"to": destination,
-						"content": "Hello @**" + sender_full_name + "** ! This might take a while to process :time_ticking:"
-					})
-					query = ' '.join(content[2:])
-					stackoverflow = StackAPI('stackoverflow')
-					stackoverflow.page_size = 3
-					stackoverflow.max_pages = 1
-					questions = stackoverflow.fetch('search/advanced', sort="relevance", q=query, order="desc", answers=1)
-					response = "\n**Closest match:** " + questions['items'][0]['title']
-					try:
-						answerjson = stackoverflow.fetch('answers/{ids}', ids=[str(questions['items'][0]['accepted_answer_id'])], filter="!9Z(-wzftf")
-						answer = "\n**Accepted answer:**\n" + answerjson['items'][0]['body_markdown']
-					except IndexError:
-						answer = "\n**No accepted answer found**"
-					response += answer + "\nOther questions:\n"
-					response += '\n'.join(("* [" + question['title'] + "](" + question['link'] + ")") for question in questions['items'][1:])
-					self.client.send_message({
-						"type": "stream",
-						"subject": message_type,
-						"to": destination,
-						"content": "Hey @**" + sender_full_name + "** Got it! :point_down:\n" + response
-					})
-
+					if(len(content) == 2):
+						self.client.send_message({
+							"type": message_type,
+							"topic": topic,
+							"to": destination,
+							"content": "Hello @**" + sender_full_name + "** ! You can make me search StackOverflow by adding the query after the command: `!help stackoverflow 'your query'`"
+						})
+					else:
+						self.client.send_message({
+							"type": message_type,
+							"topic": topic,
+							"to": destination,
+							"content": "Hello @**" + sender_full_name + "** ! This might take a while to process :time_ticking:"
+						})
+						query = ' '.join(content[2:])
+						stackoverflow = StackAPI('stackoverflow')
+						stackoverflow.page_size = 3  # lesser, the faster
+						stackoverflow.max_pages = 1  # will hit API only once
+						questions = stackoverflow.fetch('search/advanced', sort="relevance", q=query, order="desc", answers=1)
+						response = "\n**Closest match:** " + questions['items'][0]['title']
+						try:
+							answerjson = stackoverflow.fetch('answers/{ids}', ids=[str(questions['items'][0]['accepted_answer_id'])], filter="!9Z(-wzftf")  # filter code: default+"answer.body_markdown"
+							answer = "\n**Accepted answer:**\n" + answerjson['items'][0]['body_markdown']
+						except IndexError:  # faster than checking if index exists
+							answer = "\n**No accepted answer found**"
+						response += answer + "\nOther questions:\n"
+						response += '\n'.join(("* [" + question['title'] + "](" + question['link'] + ")") for question in questions['items'][1:])
+						self.client.send_message({
+							"type": "stream",
+							"subject": message_type,
+							"to": destination,
+							"content": "Hey @**" + sender_full_name + "** Got it! :point_down:\n" + response
+						})
 		elif "goodbot" in content and content[0] != "!help":
 			self.client.send_message({
 				"type": "stream",
