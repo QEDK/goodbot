@@ -7,4 +7,4 @@ python:
 install:
   - pip3 install -r requirements.txt
 script:
-  - flake8 --ignore=W191,E117,E501 bot/bot.py # for now have linting enforce checks
+  - flake8 --ignore=W191,E117,E501 bots/goodbot.py # for now have linting enforce checks

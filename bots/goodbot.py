@@ -22,7 +22,7 @@ class goodbot(object):
 		sender_email = msg["sender_email"]
 		if sender_email == BOT_MAIL:  # quick return
 			return
-		content = msg["content"].split()
+		content = msg["content"].strip().split()
 		sender_full_name = msg["sender_full_name"]
 		message_type = msg["type"]  # "stream" or "private"
 		if message_type == "stream":
@@ -55,14 +55,14 @@ class goodbot(object):
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": "Hello @**" + sender_full_name + "** ! Here's some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020"
+						"content": "Hello @**" + sender_full_name + "** ! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020"
 					})
 				if content[1].lower() == "outreachy":
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": "Hello @**" + sender_full_name + "** ! Here's some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20"
+						"content": "Hello @**" + sender_full_name + "** ! Here are some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20"
 					})
 				if content[1].lower() == "faq":
 					if(len(content) == 2):
@@ -146,7 +146,7 @@ class goodbot(object):
 						"content": "Hey @**" + sender_full_name + "** Got it! :point_down:\n" + response
 					})
 				if content[1].lower() == "chat":
-					if(len(content) == 2):  # bunch all error control into one
+					if(len(content) == 2):  # TODOL: bunch all error control into one
 						self.client.send_message({
 							"type": message_type,
 							"to": destination,
