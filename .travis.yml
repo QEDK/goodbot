@@ -7,4 +7,5 @@ python:
 install:
   - pip3 install -r requirements.txt
 script:
-  - flake8 --ignore=W191,E117,E501 bots/goodbot.py # for now have linting enforce checks
+  - flake8 --ignore=W191,E117,E501 --verbose --show-source bots/goodbot.py # for now have linting enforce checks
+  - flake8 --verbose --show-source --exit-zero bots/ircbot.py  # exit 0, fix lambdas in ircbot.py
