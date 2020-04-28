@@ -8,8 +8,6 @@ from typing import Any, Dict
 import sys
 import os
 
-# TODO: Enable linting for this
-
 
 class IRCBot(irc.bot.SingleServerIRCBot):
 	reactor_class = AioReactor
@@ -28,22 +26,22 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		# type: (*Any, **Any) -> None
 		# https://github.com/jaraco/irc/blob/master/irc/client_aio.py
 		try:
-			self.reactor.loop.run_until_complete(
-				self.connection.connect(*args, **kwargs)
-			)
+			self.reactor.loop.run_until_complete(self.connection.connect(*args, **kwargs))
 		except irc.client.ServerConnectionError:
 			print(sys.exc_info()[1])
 			raise SystemExit(1)
-
 		print("Connected to IRC server.")
 
 	def on_welcome(self, c, e):
 		# type: (ServerConnection, Event) -> None
-		msg = 'identify %s' % (self.nickserv_password,)
+		msg = 'identify %s' % (self.nickserv_password)
 		c.privmsg('NickServ', msg)
 		c.join(self.channel)
 
 		print("Joined IRC channel.")
+
+		def send(dest, msg):
+			c.privmsg(dest, msg)
 
 		def forward_to_irc(msg):
 			# type: (Dict[str, Any]) -> None
@@ -52,17 +50,17 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			if msg["type"] == "stream":
 				if msg["subject"].casefold() == self.topic.casefold() and msg["display_recipient"] == self.stream:
 					msg["content"] = ("<zulip> <%s> " % msg["sender_full_name"]) + msg["content"]
-					send = lambda x: c.privmsg(self.channel, x)  # TODO: replace lambdas with line 74 loop
+					dest = self.channel
 				else:
 					return
 			else:
 				recipients = [u["short_name"] for u in msg["display_recipient"] if u["email"] != msg["sender_email"]]
 				if len(recipients) == 1:
-					send = lambda x: c.privmsg(recipients[0], x)
+					dest = recipients[0]
 				else:
-					send = lambda x: c.privmsg_many(recipients, x)
+					dest = recipients
 			for line in msg["content"].split("\n"):
-				send(line)
+				send(dest, line)
 
 		proc = mp.Process(target=self.zulip_client.call_on_each_message, args=(forward_to_irc,))  # needs separate process, unsupported on macOS High Sierra and above
 		proc.start()

@@ -5,7 +5,7 @@ python:
   # echo -e "[api]\nemail=good-bot@zulipchat.com\nkey=$API_KEY\nsite=https://wikimedia.zulipchat.com" >> ~/goodbot
   # testing bot: - echo -e "[api]\nemail=good-bot-test@zulipchat.com\nkey=$API_KEY2\nsite=https://wikimedia.zulipchat.com" >> ~/good-testbot
 install:
+  - pip3 install flake8
   - pip3 install -r requirements.txt
 script:
-  - flake8 --ignore=W191,E117,E501 --show-source bots/goodbot.py # for now have linting enforce checks
-  - flake8 --ignore=W191,E117,E501 --show-source --exit-zero bots/ircbot.py  # exit 0, fix lambdas in ircbot.py
+  - flake8 --ignore=W191,E117,E501 --show-source bots # for now have linting enforce checks
