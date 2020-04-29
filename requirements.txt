@@ -17,7 +17,7 @@ matrix-client==0.3.2
 more-itertools==8.2.0
 pycparser==2.20
 pyOpenSSL==19.1.0
-pytz==2019.3
+pytz==2020.1
 requests==2.23.0
 six==1.14.0
 soupsieve==2.0
