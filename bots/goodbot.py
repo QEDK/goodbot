@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import zulip
 import re
 import wikipedia

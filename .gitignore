@@ -4,6 +4,7 @@ lib
 share
 *.Python
 *.cfg
+__pycache__
 
 # OS
 .DS_Store

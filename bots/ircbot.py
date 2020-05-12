@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import zulip
 import irc.bot
 import irc.strings
@@ -30,7 +31,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		except irc.client.ServerConnectionError:
 			print(sys.exc_info()[1])
 			raise SystemExit(1)
-		print("Connected to IRC server.")
+		print("Connected to IRC server")
 
 	def on_welcome(self, c, e):
 		# type: (ServerConnection, Event) -> None
@@ -38,10 +39,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		c.privmsg('NickServ', msg)
 		c.join(self.channel)
 
-		print("Joined IRC channel.")
-
-		def send(dest, msg):
-			c.privmsg(dest, msg)
+		print("Joined IRC channel")
 
 		def forward_to_irc(msg):
 			# type: (Dict[str, Any]) -> None
@@ -60,10 +58,13 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 				else:
 					dest = recipients
 			for line in msg["content"].split("\n"):
-				send(dest, line)
+				c.privmsg(dest, line)
 
-		proc = mp.Process(target=self.zulip_client.call_on_each_message, args=(forward_to_irc,))  # needs separate process, unsupported on macOS High Sierra and above
+		proc = mp.Process(target=self.zulip_client.call_on_each_message, args=(forward_to_irc,))
+		proc.daemon = True  # don't want to keep the child running if parent terminates
 		proc.start()
+		if proc.is_alive():
+			print("Connected to Zulip")
 
 	def on_privmsg(self, c, e):
 		# type: (ServerConnection, Event) -> None
@@ -110,7 +111,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 
 def main():
-	print("Begin IRCbot init")
+	print("Begin ircbot init")
 	ircbot = IRCBot(zulip.Client(config_file="~/ircbot"), "goodbot", "IRC", "#wikimedia-test", "zulipbridgebot", "irc.freenode.net", os.environ.get("IRC_PASSWORD"))
 	ircbot.start()
 
