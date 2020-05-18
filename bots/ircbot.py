@@ -112,7 +112,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 def main():
 	print("Begin ircbot init")
-	ircbot = IRCBot(zulip.Client(config_file="~/ircbot"), "goodbot", "IRC", "#wikimedia-test", "zulipbridgebot", "irc.freenode.net", os.environ.get("IRC_PASSWORD"))
+	ircbot = IRCBot(zulip.Client(config_file="~/ircbot"), "technical-support", "Testing", "#wikimedia-bots-testing", "zulipbridgebot", "irc.freenode.net", os.environ.get("IRC_PASSWORD"))
 	ircbot.start()
 
 
