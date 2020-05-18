@@ -5,7 +5,21 @@ A chat(help)bot for Wikimedia Zulipchat.
 - **goodbot**
   - **bots**
     - **goodbot.py** Zulip chatbot
-    - **ircbot.py** Zilip-IRC bridgebot  
+    - **ircbot.py** Zilip-IRC bridgebot
+
+## Installation
+It is recommended you use a virtual environment for building the project (such as Python's `venv` or the `virtualenv` module).
+```bash
+$ git clone git@github.com:QEDK/goodbot.git
+$ cd goodbot
+$ pip3 install -r requirements.txt
+```
+
+For running tests (you need to install flake8 and nose beforehand), run these commands inside the `goodbot` directory:
+```bash
+$ flake8 --ignore=W191,E117,E501 bots # linting, use --show-source to see individual errors
+$ nosetests
+```
 
 ## Style guidelines
 

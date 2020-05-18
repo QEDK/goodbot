@@ -22,7 +22,7 @@ def test_zulip():
 def test_irc():
 	proc = subprocess.Popen(["python3", "-u", "bots/ircbot.py"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=os.setsid)
 	try:
-		outs, errs = proc.communicate(timeout=15)
+		outs, errs = proc.communicate(timeout=20)
 	except subprocess.TimeoutExpired:
 		os.killpg(os.getpgid(proc.pid), signal.SIGKILL)  # force os to kill child processes
 		outs, errs = proc.communicate()
