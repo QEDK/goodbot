@@ -9,7 +9,7 @@ BOT_MAIL = "good-bot@zulipchat.com"
 
 class goodbot(object):
 	def __init__(self):
-		self.client = zulip.Client(config_file="~/zuliprc")
+		self.client = zulip.Client(config_file="~/goodbot")
 		self.subscribe_all()
 		print("Bot init complete")
 
