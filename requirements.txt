@@ -14,7 +14,7 @@ jaraco.logging==3.0.0
 jaraco.stream==3.0.0
 jaraco.text==3.2.0
 matrix-client==0.3.2
-more-itertools==8.2.0
+more-itertools==8.3.0
 pycparser==2.20
 pyOpenSSL==19.1.0
 pytz==2020.1
