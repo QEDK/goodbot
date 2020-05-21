@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 import zulip
 import irc.bot
+from irc.bot import ExponentialBackoff
 import irc.strings
 from irc.client import ip_numstr_to_quad, Event, ServerConnection
 from irc.client_aio import AioReactor
 import multiprocessing as mp
 from typing import Any, Dict
+import re
 import sys
 import os
 
@@ -15,7 +17,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 	def __init__(self, zulip_client, stream, topic, channel, nickname, server, nickserv_password, port=6667):
 		# type: (Any, str, str, irc.bot.Channel, str, str, str, int) -> None
-		irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
+		irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname, recon=ExponentialBackoff(min_interval=0))
 		self.channel = channel  # type: irc.bot.Channel
 		self.zulip_client = zulip_client
 		self.stream = stream
@@ -41,13 +43,16 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 		print("Joined IRC channel")
 
+		markdownfmt = re.compile(r"(_?\*\*|\|\d*\*\*|`{3,}\n)")
+		replyfmt = re.compile(r"@.*\[said\].*```quote\n", flags=re.DOTALL)
+
 		def forward_to_irc(msg):
 			# type: (Dict[str, Any]) -> None
 			if msg["sender_email"] == self.zulip_client.email:  # quick return
 				return
 			if msg["type"] == "stream":
 				if msg["subject"].casefold() == self.topic.casefold() and msg["display_recipient"] == self.stream:
-					msg["content"] = ("<zulip> <%s> " % msg["sender_full_name"]) + msg["content"]
+					msg["content"] = ("[zulip] <%s> " % msg["sender_full_name"]) + msg["content"]
 					dest = self.channel
 				else:
 					return
@@ -57,11 +62,12 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 					dest = recipients[0]
 				else:
 					dest = recipients
+			msg["content"] = re.sub(replyfmt, "Quoting: ", msg["content"])
+			msg["content"] = re.sub(markdownfmt, "", msg["content"])
 			for line in msg["content"].split("\n"):
 				c.privmsg(dest, line)
 
 		proc = mp.Process(target=self.zulip_client.call_on_each_message, args=(forward_to_irc,))
-		proc.daemon = True  # don't want to keep the child running if parent terminates
 		proc.start()
 		if proc.is_alive():
 			print("Connected to Zulip")
@@ -76,7 +82,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"type": "stream",
 			"to": self.stream,
 			"topic": self.topic,
-			"content": "<irc> <{0}> {1}".format(sender, content)
+			"content": "[irc] <{0}> {1}".format(sender, content)
 		}))
 
 	def on_pubmsg(self, c, e):
@@ -89,7 +95,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"type": "stream",
 			"to": self.stream,
 			"topic": self.topic,
-			"content": "<irc> <{0}> {1}".format(sender, content)
+			"content": "[irc] <{0}> {1}".format(sender, content)
 		}))
 
 	def on_dccmsg(self, c, e):  # DCC<->Zulip compat not checked yet
