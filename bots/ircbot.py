@@ -37,8 +37,8 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 	def on_welcome(self, c, e):
 		# type: (ServerConnection, Event) -> None
-		msg = 'identify %s' % (self.nickserv_password)
-		c.privmsg('NickServ', msg)
+		msg = f"identify {self.nickserv_password}"
+		c.privmsg("NickServ", msg)
 		c.join(self.channel)
 
 		print("Joined IRC channel")
@@ -52,7 +52,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 				return
 			if msg["type"] == "stream":
 				if msg["subject"].casefold() == self.topic.casefold() and msg["display_recipient"] == self.stream:
-					msg["content"] = ("[zulip] <%s> " % msg["sender_full_name"]) + msg["content"]
+					msg["content"] = f"[zulip] <{msg['sender_full_name']}> {msg['content']}"
 					dest = self.channel
 				else:
 					return
@@ -82,7 +82,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"type": "stream",
 			"to": self.stream,
 			"topic": self.topic,
-			"content": "[irc] <{0}> {1}".format(sender, content)
+			"content": f"[irc] <{sender}> {content}"
 		}))
 
 	def on_pubmsg(self, c, e):
@@ -95,12 +95,12 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"type": "stream",
 			"to": self.stream,
 			"topic": self.topic,
-			"content": "[irc] <{0}> {1}".format(sender, content)
+			"content": f"[irc] <{sender}> {content}"
 		}))
 
 	def on_dccmsg(self, c, e):  # DCC<->Zulip compat not checked yet
 		# type: (ServerConnection, Event) -> None
-		c.privmsg("You said: " + e.arguments[0])
+		c.privmsg(f"You said: {e.arguments[0]}")
 
 	def on_dccchat(self, c, e):
 		# type: (ServerConnection, Event) -> None

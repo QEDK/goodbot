@@ -1,6 +1,6 @@
 branches:
   except:
-    - dependabot # prevent conflicting builds
+    - /dependabot/ # prevent conflicting builds
 os: linux
 dist: bionic # based on debian buster
 language: python
