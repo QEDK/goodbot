@@ -1,7 +1,8 @@
 # venv
-bin
-lib
-share
+bin/
+lib/
+share/
+include/
 *.Python
 *.cfg
 __pycache__

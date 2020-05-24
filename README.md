@@ -5,17 +5,17 @@ A chat(help)bot for Wikimedia Zulipchat.
 - **goodbot**
   - **bots**
     - **goodbot.py** Zulip chatbot
-    - **ircbot.py** Zilip-IRC bridgebot
+    - **ircbot.py** Zulip-IRC bridgebot
 
 ## Installation
-It is recommended you use a virtual environment for building the project (such as Python's `venv` or the `virtualenv` module).
+It is recommended you use a virtual environment for building the project (such as Python's `venv` or the `virtualenv` module) to easily manage dependencies.
 ```bash
 $ git clone git@github.com:QEDK/goodbot.git
 $ cd goodbot
 $ pip3 install -r requirements.txt
 ```
 
-For running tests (you need to install flake8 and nose beforehand), run these commands inside the `goodbot` directory:
+For running tests (you need to install flake8 and nose beforehand), run these commands inside the `goodbot` directory and it will automatically run the tests for you:
 ```bash
 $ flake8 --ignore=W191,E117,E501 bots # linting, use --show-source to see individual errors
 $ nosetests
@@ -24,7 +24,7 @@ $ nosetests
 ## Style guidelines
 
 Full list at https://www.flake8rules.com
-Travis checks linting automatically for all commits.
+Travis will check linting automatically for all commits (including pull requests), you can run flake8 with the required commands to get equivalent results.
 
 ### Ignored (should not be followed):
 

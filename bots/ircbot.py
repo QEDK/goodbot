@@ -22,7 +22,6 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		self.zulip_client = zulip_client
 		self.stream = stream
 		self.topic = topic
-		self.IRC_DOMAIN = server
 		self.nickserv_password = nickserv_password
 
 	def connect(self, *args, **kwargs):
