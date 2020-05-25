@@ -10,7 +10,6 @@ from typing import Any, Dict
 import configparser
 import re
 import os
-import asyncio
 
 
 class IRCBot(irc.bot.SingleServerIRCBot):
@@ -77,7 +76,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		if proc.is_alive():
 			print("Connected to Zulip")
 
-	async def on_privmsg(self, c, e):
+	def on_privmsg(self, c, e):
 		# type: (ServerConnection, Event) -> None
 		content = e.arguments[0]
 		sender = e.source.split("!")[0]
@@ -90,7 +89,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"content": f"[irc] <{sender}> {content}"
 		}))
 
-	async def on_pubmsg(self, c, e):
+	def on_pubmsg(self, c, e):
 		# type: (ServerConnection, Event) -> None
 		content = e.arguments[0]
 		sender = e.source.split("!")[0]
@@ -103,11 +102,11 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"content": f"[irc] <{sender}> {content}"
 		}))
 
-	async def on_dccmsg(self, c, e):  # DCC<->Zulip compat not checked yet
+	def on_dccmsg(self, c, e):  # DCC<->Zulip compat not checked yet
 		# type: (ServerConnection, Event) -> None
 		c.privmsg(f"You said: {e.arguments[0]}")
 
-	async def on_dccchat(self, c, e):
+	def on_dccchat(self, c, e):
 		# type: (ServerConnection, Event) -> None
 		if len(e.arguments) != 2:
 			return
@@ -124,7 +123,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 def main():
 	print("Begin ircbot init")
 	ircbot = IRCBot(config_file="~/ircbot")
-	asyncio.run(ircbot.start())
+	ircbot.start()
 
 
 if __name__ == "__main__":
