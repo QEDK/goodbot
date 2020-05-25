@@ -7,30 +7,38 @@ from irc.client import ip_numstr_to_quad, Event, ServerConnection
 from irc.client_aio import AioReactor
 import multiprocessing as mp
 from typing import Any, Dict
+import configparser
 import re
-import sys
 import os
 
 
 class IRCBot(irc.bot.SingleServerIRCBot):
 	reactor_class = AioReactor
 
-	def __init__(self, zulip_client, stream, topic, channel, nickname, server, nickserv_password, port=6667):
-		# type: (Any, str, str, irc.bot.Channel, str, str, str, int) -> None
-		irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname, recon=ExponentialBackoff(min_interval=0))
-		self.channel = channel  # type: irc.bot.Channel
-		self.zulip_client = zulip_client
-		self.stream = stream
-		self.topic = topic
-		self.nickserv_password = nickserv_password
+	def __init__(self, config_file):
+		# type: (Any, str) -> None
+		config = configparser.ConfigParser()
+		config.read(os.path.abspath(os.path.expanduser(config_file)))
+		config = config["irc"]
+		server = config.get("server")  # type: str
+		port = config.getint("port", 6667)  # type: int
+		nickname = config.get("nickname")  # type: str
+		realname = config.get("realname", nickname)  # type: str
+		min_interval = config.getint("min_interval", 0)  # type: int
+		self.channel = config.get("channel")  # type: str
+		self.nickserv_password = config.get("nickserv_password")  # type: str
+		self.stream = config.get("stream")  # type: str
+		self.topic = config.get("topic", "IRC")  # type: str
+		self.zulip_client = zulip.Client(config_file=config_file)
+		irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, realname, recon=ExponentialBackoff(min_interval=min_interval))
 
 	def connect(self, *args, **kwargs):
 		# type: (*Any, **Any) -> None
 		# https://github.com/jaraco/irc/blob/master/irc/client_aio.py
 		try:
 			self.reactor.loop.run_until_complete(self.connection.connect(*args, **kwargs))
-		except irc.client.ServerConnectionError:
-			print(sys.exc_info()[1])
+		except irc.client.ServerConnectionError as e:
+			print(e)
 			raise SystemExit(1)
 		print("Connected to IRC server")
 
@@ -39,7 +47,6 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		msg = f"identify {self.nickserv_password}"
 		c.privmsg("NickServ", msg)
 		c.join(self.channel)
-
 		print("Joined IRC channel")
 
 		markdownfmt = re.compile(r"(_?\*\*|\|\d*\*\*|`{3,}\n)")
@@ -117,7 +124,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 def main():
 	print("Begin ircbot init")
-	ircbot = IRCBot(zulip.Client(config_file="~/ircbot"), "technical-support", "Testing", "#wikimedia-bots-testing", "zulipbridgebot", "irc.freenode.net", os.environ.get("IRC_PASSWORD"))
+	ircbot = IRCBot(config_file="~/ircbot")
 	ircbot.start()
 
 
