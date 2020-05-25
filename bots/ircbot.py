@@ -10,6 +10,7 @@ from typing import Any, Dict
 import configparser
 import re
 import os
+import asyncio
 
 
 class IRCBot(irc.bot.SingleServerIRCBot):
@@ -20,23 +21,23 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		config = configparser.ConfigParser()
 		config.read(os.path.abspath(os.path.expanduser(config_file)))
 		config = config["irc"]
-		server = config.get("server")  # type: str
-		port = config.getint("port", 6667)  # type: int
-		nickname = config.get("nickname")  # type: str
-		realname = config.get("realname", nickname)  # type: str
-		min_interval = config.getint("min_interval", 0)  # type: int
-		self.channel = config.get("channel")  # type: str
-		self.nickserv_password = config.get("nickserv_password")  # type: str
+		self.server = config.get("server")  # type: str
+		self.port = config.getint("port", 6667)  # type: int
+		self.nickname = config.get("nickname")  # type: str
+		self.realname = config.get("realname", self.nickname)  # type: str
+		self.min_interval = config.getint("min_interval", 0)  # type: int
+		self.channel = config.get("channel")  # type: irc.bot.Channel
+		self.password = config.get("nickserv_password")  # type: str
 		self.stream = config.get("stream")  # type: str
 		self.topic = config.get("topic", "IRC")  # type: str
 		self.zulip_client = zulip.Client(config_file=config_file)
-		irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, realname, recon=ExponentialBackoff(min_interval=min_interval))
+		irc.bot.SingleServerIRCBot.__init__(self, [(self.server, self.port)], self.nickname, self.realname, recon=ExponentialBackoff(min_interval=self.min_interval))
 
 	def connect(self, *args, **kwargs):
 		# type: (*Any, **Any) -> None
 		# https://github.com/jaraco/irc/blob/master/irc/client_aio.py
 		try:
-			self.reactor.loop.run_until_complete(self.connection.connect(*args, **kwargs))
+			self.reactor.loop.run_until_complete(self.connection.connect(self.server, self.port, self.nickname, password=self.password, **kwargs))
 		except irc.client.ServerConnectionError as e:
 			print(e)
 			raise SystemExit(1)
@@ -44,8 +45,6 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 	def on_welcome(self, c, e):
 		# type: (ServerConnection, Event) -> None
-		msg = f"identify {self.nickserv_password}"
-		c.privmsg("NickServ", msg)
 		c.join(self.channel)
 		print("Joined IRC channel")
 
@@ -78,7 +77,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		if proc.is_alive():
 			print("Connected to Zulip")
 
-	def on_privmsg(self, c, e):
+	async def on_privmsg(self, c, e):
 		# type: (ServerConnection, Event) -> None
 		content = e.arguments[0]
 		sender = e.source.split("!")[0]
@@ -91,7 +90,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"content": f"[irc] <{sender}> {content}"
 		}))
 
-	def on_pubmsg(self, c, e):
+	async def on_pubmsg(self, c, e):
 		# type: (ServerConnection, Event) -> None
 		content = e.arguments[0]
 		sender = e.source.split("!")[0]
@@ -104,11 +103,11 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"content": f"[irc] <{sender}> {content}"
 		}))
 
-	def on_dccmsg(self, c, e):  # DCC<->Zulip compat not checked yet
+	async def on_dccmsg(self, c, e):  # DCC<->Zulip compat not checked yet
 		# type: (ServerConnection, Event) -> None
 		c.privmsg(f"You said: {e.arguments[0]}")
 
-	def on_dccchat(self, c, e):
+	async def on_dccchat(self, c, e):
 		# type: (ServerConnection, Event) -> None
 		if len(e.arguments) != 2:
 			return
@@ -125,7 +124,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 def main():
 	print("Begin ircbot init")
 	ircbot = IRCBot(config_file="~/ircbot")
-	ircbot.start()
+	asyncio.run(ircbot.start())
 
 
 if __name__ == "__main__":
