@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 import zulip
-import re
 import wikipedia
 from stackapi import StackAPI
-
-BOT_MAIL = "good-bot@zulipchat.com"
+import re
+import configparser
+import os
 
 
 class goodbot(object):
-	def __init__(self):
-		self.client = zulip.Client(config_file="~/goodbot")
+	def __init__(self, config_file="~/goodbot"):
+		config = configparser.ConfigParser()
+		config.read(os.path.abspath(os.path.expanduser(config_file)))
+		config = config["api"]
+		self.bot_mail = config.get("email")
+		self.client = zulip.Client(config_file=config_file)
 		self.subscribe_all()
 		print("Bot init complete")
 
@@ -21,7 +25,7 @@ class goodbot(object):
 
 	def process(self, msg):
 		sender_email = msg["sender_email"]
-		if sender_email == BOT_MAIL:  # quick return
+		if sender_email == self.bot_mail:  # quick return
 			return
 		content = msg["content"].strip().split()
 		sender_full_name = msg["sender_full_name"]
@@ -107,7 +111,7 @@ class goodbot(object):
 						page = wikipedia.page(result)
 						response += ("* [" + page.title + "](" + page.url + ")\n")
 					self.client.send_message({
-						"type": "stream",
+						"type": message_type,
 						"topic": topic,
 						"to": destination,
 						"content": response
@@ -147,7 +151,7 @@ class goodbot(object):
 						"content": "Hey @**" + sender_full_name + "** Got it! :point_down:\n" + response
 					})
 				if content[1].lower() == "chat":
-					if(len(content) == 2):  # TODOL: bunch all error control into one
+					if(len(content) == 2):  # TODO: bunch all error control into one
 						self.client.send_message({
 							"type": message_type,
 							"to": destination,
@@ -182,7 +186,7 @@ class goodbot(object):
 
 def main():
 	print("Begin bot init")
-	bot = goodbot()
+	bot = goodbot(config_file="~/goodbot")
 	bot.client.call_on_each_message(bot.process)
 
 
