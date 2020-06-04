@@ -8,7 +8,7 @@ import os
 
 
 class goodbot(object):
-	def __init__(self, config_file="~/goodbot"):
+	def __init__(self, config_file="~/zuliprc"):
 		config = configparser.ConfigParser()
 		config.read(os.path.abspath(os.path.expanduser(config_file)))
 		config = config["api"]
@@ -38,12 +38,12 @@ class goodbot(object):
 
 		print(str(content) + "\nSuccessfully heard.")
 
-		if "just signed up for" in msg["content"]:  # hack for reading #announce stream
+		if sender_email == "notification-bot@zulip.com" and topic == "signups":  # hack for reading #announce stream
 			self.client.send_message({
 				"type": message_type,
 				"topic": topic,
-				"to": "goodbot",
-				"content": "Hey " + re.match(r".*\d\*\*\s", msg["content"]).group(0) + " ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoC, type `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help` for a full list of available commands. Soon I'll have more features :)"
+				"to": destination,
+				"content": "Hey @" + re.match(r"\*\*\.*\*\*", msg["content"]).group(0) + " ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoC, type `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help` for a full list of available commands. Soon I'll have more features :)"
 			})
 
 		if content[0].lower() == "!help" or content[0] == "@**goodbot**":
@@ -186,7 +186,7 @@ class goodbot(object):
 
 def main():
 	print("Begin bot init")
-	bot = goodbot(config_file="~/goodbot")
+	bot = goodbot(config_file="~/zuliprc")
 	bot.client.call_on_each_message(bot.process)
 
 

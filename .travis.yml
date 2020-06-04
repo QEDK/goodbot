@@ -7,7 +7,7 @@ language: python
 python:
   - "3.7.3" # latest version on Toolforge Kubernetes
 before_install:
-  - echo -e "[api]\nemail=good-test-bot@zulipchat.com\nkey=$API_KEY\nsite=https://wikimedia.zulipchat.com" >> ~/goodbot
+  - echo -e "[api]\nemail=good-test-bot@zulipchat.com\nkey=$API_KEY\nsite=https://wikimedia.zulipchat.com" >> ~/zuliprc
   - echo -e "[api]\nemail=irc-test-bot@zulipchat.com\nkey=$API_KEY2\nsite=https://wikimedia.zulipchat.com\n" >> ~/ircbot
   - echo -e "[irc]\nserver=irc.freenode.net\nnickname=zuliptestbot\nchannel=#wikimedia-bots-testing\nnickserv_password=$IRC_PASSWORD\nstream=technical-support\ntopic=General" >> ~/ircbot
 install:
