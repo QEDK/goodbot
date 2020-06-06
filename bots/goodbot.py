@@ -45,7 +45,7 @@ class goodbot(object):
 				"topic": topic,
 				"to": destination,
 				"content": f"Hey @{username} ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoC, type `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help` for a full list of available commands. Soon I\'ll have more features :)"
-				})
+			})
 
 		if content[0].lower() == "!help" or content[0] == "@**goodbot**":
 			if(len(content) == 1):
