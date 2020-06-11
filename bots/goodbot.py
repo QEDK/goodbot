@@ -65,7 +65,7 @@ class goodbot(object):
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020"
+						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
 					})
 				if content[1].lower() == "outreachy":
 					self.subscribe_user("gsoc20-outreachy20", sender_email)
@@ -73,7 +73,7 @@ class goodbot(object):
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20\nYou have been subscribed to the #**gsoc20-outreachy20**"
+						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
 					})
 				if content[1].lower() == "faq":
 					if(len(content) == 2):
