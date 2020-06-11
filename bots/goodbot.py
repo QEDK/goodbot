@@ -24,7 +24,7 @@ class goodbot(object):
 		print("Subscription complete")
 
 	def subscribe_user(self, stream, user_email):
-		self.client.add_subscriptions(streams=[{"name": [stream]}], principals=[user_email])
+		self.client.add_subscriptions(streams=[{"name": stream}], principals=[user_email])
 
 	def process(self, msg):
 		sender_email = msg["sender_email"]
