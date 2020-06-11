@@ -23,6 +23,9 @@ class goodbot(object):
 		self.client.add_subscriptions(streams)
 		print("Subscription complete")
 
+	def subscribe_user(self, stream, user_email):
+		self.client.add_subscriptions(streams=[{"name": [stream]}], principals=[user_email])
+
 	def process(self, msg):
 		sender_email = msg["sender_email"]
 		if sender_email == self.bot_mail:  # quick return
@@ -57,6 +60,7 @@ class goodbot(object):
 				})
 			elif(len(content) > 1):
 				if content[1].lower() == "gsoc":
+					self.subscribe_user("gsoc20-outreachy20", sender_email)
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
@@ -64,11 +68,12 @@ class goodbot(object):
 						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020"
 					})
 				if content[1].lower() == "outreachy":
+					self.subscribe_user("gsoc20-outreachy20", sender_email)
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20"
+						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20\nYou have been subscribed to the #**gsoc20-outreachy20**"
 					})
 				if content[1].lower() == "faq":
 					if(len(content) == 2):
