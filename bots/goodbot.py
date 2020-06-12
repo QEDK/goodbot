@@ -67,6 +67,14 @@ class goodbot(object):
 						"to": destination,
 						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
 					})
+				if content[1].lower() == "gsod":
+					self.subscribe_user("gsod20", sender_email)
+					self.client.send_message({
+						"type": message_type,
+						"topic": topic,
+						"to": destination,
+						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoD participants: https://www.mediawiki.org/wiki/Season_of_Docs/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Season_of_Docs/2020\nYou have been subscribed to the #**gsod20** stream for further help."
+					})
 				if content[1].lower() == "outreachy":
 					self.subscribe_user("gsoc20-outreachy20", sender_email)
 					self.client.send_message({
