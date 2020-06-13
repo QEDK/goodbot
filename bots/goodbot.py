@@ -47,7 +47,7 @@ class goodbot(object):
 				"type": message_type,
 				"topic": topic,
 				"to": destination,
-				"content": f"Hey @{username} ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoC, type `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help` for a full list of available commands. Soon I\'ll have more features :)"
+				"content": f"Hey @{username} ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoD proposals, type `!help gsod`.\nIf you need any help with GSoC proposals, type `!help gsoc`.\nIf you need help with Outreachy proposals, type `!help outreachy`.\nYou can join the #**technical-support** channel to get technical help related to Wikimedia infrastructure.\nType `!help` for a full list of available commands. :blush:"
 			})
 
 		if content[0].lower() == "!help" or content[0] == "@**goodbot**":
@@ -56,7 +56,7 @@ class goodbot(object):
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"Hey there, @**{sender_full_name}** ! :blush: Here's what I can do for you:\nType `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help faq 'your question'` to search FAQs.\nType `!help wikipedia 'title'` to search articles.\nType `!help stackoverflow 'your question'` to search questions."
+					"content": f"Hey there, @**{sender_full_name}** ! :blush: Here's what I can do for you:\nType `!help gsod` for help with GSoD proposals.\nType `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help faq 'your question'` to search FAQs.\nType `!help wikipedia 'title'` to search articles.\nType `!help stackoverflow 'your question'` to search questions.\nType `!help chat mediawiki` to get help regarding MediaWiki software.\nType `!help chat wikimedia` to get technical help regarding Wikimedia. You can also join the #**technical-support** channel to get technical help related to Wikimedia infrastructure."
 				})
 			elif(len(content) > 1):
 				if content[1].lower() == "gsoc":
