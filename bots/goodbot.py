@@ -47,7 +47,7 @@ class goodbot(object):
 				"type": message_type,
 				"topic": topic,
 				"to": destination,
-				"content": f"Hey @{username} ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoC, type `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help` for a full list of available commands. Soon I\'ll have more features :)"
+				"content": f"Hey @{username} ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoD proposals, type `!help gsod`.\nIf you need any help with GSoC proposals, type `!help gsoc`.\nIf you need help with Outreachy proposals, type `!help outreachy`.\nYou can join the #**technical-support** channel to get technical help related to Wikimedia infrastructure.\nType `!help` for a full list of available commands. :blush:"
 			})
 
 		if content[0].lower() == "!help" or content[0] == "@**goodbot**":
@@ -56,7 +56,7 @@ class goodbot(object):
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"Hey there, @**{sender_full_name}** ! :blush: Here's what I can do for you:\nType `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help faq 'your question'` to search FAQs.\nType `!help wikipedia 'title'` to search articles.\nType `!help stackoverflow 'your question'` to search questions."
+					"content": f"Hey there, @**{sender_full_name}** ! :blush: Here's what I can do for you:\nType `!help gsod` for help with GSoD proposals.\nType `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help faq 'your question'` to search FAQs.\nType `!help wikipedia 'title'` to search articles.\nType `!help stackoverflow 'your question'` to search questions.\nType `!help chat mediawiki` to get help regarding MediaWiki software.\nType `!help chat wikimedia` to get technical help regarding Wikimedia. You can also join the #**technical-support** channel to get technical help related to Wikimedia infrastructure."
 				})
 			elif(len(content) > 1):
 				if content[1].lower() == "gsoc":
@@ -66,6 +66,14 @@ class goodbot(object):
 						"topic": topic,
 						"to": destination,
 						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
+					})
+				if content[1].lower() == "gsod":
+					self.subscribe_user("gsod20", sender_email)
+					self.client.send_message({
+						"type": message_type,
+						"topic": topic,
+						"to": destination,
+						"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoD participants: https://www.mediawiki.org/wiki/Season_of_Docs/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Season_of_Docs/2020\nYou have been subscribed to the #**gsod20** stream for further help."
 					})
 				if content[1].lower() == "outreachy":
 					self.subscribe_user("gsoc20-outreachy20", sender_email)
@@ -166,18 +174,20 @@ class goodbot(object):
 						})
 						return
 					if(content[2].lower() == "wikimedia"):
+						self.subscribe_user("technical-support", sender_email)
 						self.client.send_message({
 							"type": message_type,
 							"to": destination,
 							"topic": topic,
-							"content": f"Hey @**{sender_full_name}** You can get help at the [#wikimedia-tech](https://webchat.freenode.net/?channels=wikimedia-tech) IRC channel. You can also request assistance on [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org)"
+							"content": f"Hey @**{sender_full_name}** You can get help at the [#wikimedia-tech](https://webchat.freenode.net/?channels=wikimedia-tech) IRC channel or at [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org) on Discourse.\nYou have been subscribed to the #**technical-support** stream for further help."
 						})
 					if(content[2].lower() == "mediawiki"):
+						self.subscribe_user("technical-support", sender_email)
 						self.client.send_message({
 							"type": message_type,
 							"to": destination,
 							"topic": topic,
-							"content": f"Hey @**{sender_full_name}** You can get help at the [#mediawiki](https://webchat.freenode.net/?channels=mediawiki) IRC channel. You can also request assistance on [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org) You can see a full list of available channels [here](https://meta.wikimedia.org/wiki/IRC/Channels#MediaWiki_and_technical)"
+							"content": f"Hey @**{sender_full_name}** You can get help at the [#mediawiki](https://webchat.freenode.net/?channels=mediawiki) IRC channel or at [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org) on Discourse.\nYou can see a full list of available IRC channels [here](https://meta.wikimedia.org/wiki/IRC/Channels#MediaWiki_and_technical).\nYou have been subscribed to the #**technical-support** stream for further help."
 						})
 		elif "goodbot" in content and content[0] != "!help":
 			self.client.send_message({
