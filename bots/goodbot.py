@@ -174,18 +174,20 @@ class goodbot(object):
 						})
 						return
 					if(content[2].lower() == "wikimedia"):
+						self.subscribe_user("technical-support", sender_email)
 						self.client.send_message({
 							"type": message_type,
 							"to": destination,
 							"topic": topic,
-							"content": f"Hey @**{sender_full_name}** You can get help at the [#wikimedia-tech](https://webchat.freenode.net/?channels=wikimedia-tech) IRC channel. You can also request assistance on [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org)"
+							"content": f"Hey @**{sender_full_name}** You can get help at the [#wikimedia-tech](https://webchat.freenode.net/?channels=wikimedia-tech) IRC channel or at [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org) on Discourse.\nYou have been subscribed to the #**technical-support** stream for further help."
 						})
 					if(content[2].lower() == "mediawiki"):
+						self.subscribe_user("technical-support", sender_email)
 						self.client.send_message({
 							"type": message_type,
 							"to": destination,
 							"topic": topic,
-							"content": f"Hey @**{sender_full_name}** You can get help at the [#mediawiki](https://webchat.freenode.net/?channels=mediawiki) IRC channel. You can also request assistance on [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org) You can see a full list of available channels [here](https://meta.wikimedia.org/wiki/IRC/Channels#MediaWiki_and_technical)"
+							"content": f"Hey @**{sender_full_name}** You can get help at the [#mediawiki](https://webchat.freenode.net/?channels=mediawiki) IRC channel or at [Wikimedia Developer Support](https://discourse-mediawiki.wmflabs.org) on Discourse.\nYou can see a full list of available IRC channels [here](https://meta.wikimedia.org/wiki/IRC/Channels#MediaWiki_and_technical).\nYou have been subscribed to the #**technical-support** stream for further help."
 						})
 		elif "goodbot" in content and content[0] != "!help":
 			self.client.send_message({
