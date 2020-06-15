@@ -1,0 +1,14 @@
+{
+	"questions":{
+		"How can I prepare for the Google Summer of Code ahead of time": "preparation",
+		"How can I prepare for GSoC ahead of time": "preparation",
+		"How can I prepare for the Outreachy program ahead of time": "preparation",
+		"How do I start working on a Wikimedia project listed for Google Summer of Code": "startworking",
+		"How do I start working on a Wikimedia project listed for GSoC": "startworking",
+		"How do I start working on a Wikimedia project listed for Outreachy": "startworking"
+	},
+	"answers": {
+		"preparation": "Wikimedia will start listing projects only by mid-February and mid-August on the corresponding subpages of Google Summer of Code and Outreachy on MediaWiki.org. If you would like to start preparing before the application period opens, here are a few ideas for you to explore:\n* Learn about the application process steps and recipe of a successful internship for a Google Summer of Code or Outreachy project.\n* Involve yourself in an existing Wikimedia project by fixing a few [[:w:en:Software bug|software bugs]] listed on the Good first bugs page.\n* Make small contributions to New Developers projects.",
+		"startworking": "You could start with expressing your interest in working on the project by commenting on the [[phab:|Phabricator]] task associated with it. You could then set up up the development environment and choose a microtask to work on. Microtasks would be linked from each project's task description on Phabricator. Mentors will guide you in the process and help you make a contribution to the project."
+	}
+}
