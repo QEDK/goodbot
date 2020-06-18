@@ -112,7 +112,7 @@ class goodbot(object):
 								"content": f"Hello @**{sender_full_name}** ! You can ask me a question by adding the question after the command: `!help faq 'your question'`"
 							})
 							return
-						lookup = self.fuzzymatch(' '.join(content[2:]))
+						lookup = self.fuzzymatch(" ".join(content[2:]))
 						if lookup is None:
 							return
 						else:
