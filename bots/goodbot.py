@@ -3,8 +3,8 @@ import zulip
 import wikipedia
 from stackapi import StackAPI
 import configparser
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process as fuzzproc
+from rapidfuzz import fuzz
+from rapidfuzz import process as fuzzproc
 import json
 import re
 import os
