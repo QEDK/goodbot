@@ -38,3 +38,17 @@ Travis will check linting automatically for all commits (including pull requests
 * **E126** - continuation line over-indented for hanging indent (one indent only)
 * **W504** - line break after binary operator not allowed since E501 is ignored (no line-length limit)
 
+## License
+
+Licensed under either of
+
+ * MIT license ([LICENSE-MIT](LICENSE) or http://opensource.org/licenses/MIT)
+ * Lesser General Public license v3.0 ([LICENSE-LGPL](LICENSE-LGPL) or https://www.gnu.org/licenses/lgpl-3.0.html)
+
+at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the LGPL-3.0 license, shall be dual licensed as above, without any
+additional terms or conditions.
