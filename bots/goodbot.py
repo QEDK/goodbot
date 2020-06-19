@@ -2,8 +2,11 @@
 import zulip
 import wikipedia
 from stackapi import StackAPI
-import re
 import configparser
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process as fuzzproc
+import json
+import re
 import os
 
 
@@ -14,6 +17,10 @@ class goodbot(object):
 		config = config["api"]
 		self.bot_mail = config.get("email")
 		self.client = zulip.Client(config_file=config_file)
+		with open(os.path.join(os.path.dirname(__file__), "..", "templates", "faq.json")) as file:
+			self.faqs = json.load(file)
+		self.questions = list(question for question in self.faqs["questions"])
+		self.answers = self.faqs["answers"]
 		self.subscribe_all()
 		print("Bot init complete")
 
@@ -25,6 +32,14 @@ class goodbot(object):
 
 	def subscribe_user(self, stream, user_email):
 		self.client.add_subscriptions(streams=[{"name": stream}], principals=[user_email])
+
+	def fuzzymatch(self, faq):
+		answer = fuzzproc.extractOne(faq, self.questions, scorer=fuzz.token_sort_ratio)
+		if answer[1] > 60:
+			print(answer)
+			return self.answers[self.faqs["questions"][answer[0]]]
+		else:
+			return None
 
 	def process(self, msg):
 		sender_email = msg["sender_email"]
@@ -97,12 +112,16 @@ class goodbot(object):
 								"content": f"Hello @**{sender_full_name}** ! You can ask me a question by adding the question after the command: `!help faq 'your question'`"
 							})
 							return
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": f"Hello @**{sender_full_name}** ! In all our projects, we list the level of expertise and skills required. Although you can choose to share your skillset with organization administrators, all they might be able to do is point you to the list of projects you might have seen already on MediaWiki.org. It might be ideal if you assess for yourself which project best suits you based on the skills required, level of expertise needed and any topic area that interests you more. And, this would save everyone some time!"
-						})
+						lookup = self.fuzzymatch(" ".join(content[2:]))
+						if lookup is None:
+							return
+						else:
+							self.client.send_message({
+								"type": message_type,
+								"topic": topic,
+								"to": destination,
+								"content": f"Hello @**{sender_full_name}** ! {lookup}"
+							})
 					if content[1].lower() == "wikipedia":
 						if(len(content) == 2):
 							self.client.send_message({
@@ -118,7 +137,7 @@ class goodbot(object):
 							"to": destination,
 							"content": f"Hello @**{sender_full_name}** ! This might take a while to process :time_ticking:"
 						})
-						query = ' '.join(content[2:])
+						query = " ".join(content[2:])
 						self.client.send_message({
 							"type": message_type,
 							"topic": topic,
