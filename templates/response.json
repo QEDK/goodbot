@@ -1,4 +1,0 @@
-{
-	"greetings": "Hey;Hello;Hi;Hello there;Hey there;Hi there",
-	"welcome": "Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoD proposals, type `!help gsod`.\nIf you need any help with GSoC proposals, type `!help gsoc`.\nIf you need help with Outreachy proposals, type `!help outreachy`.\nYou can join the #**technical-support** channel to get technical help related to Wikimedia infrastructure.\nType `!help` for a full list of available commands. :blush:"
-}
