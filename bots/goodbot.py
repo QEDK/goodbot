@@ -5,6 +5,7 @@ from stackapi import StackAPI
 import configparser
 from rapidfuzz import fuzz
 from rapidfuzz import process as fuzzproc
+from pathlib import Path
 import json
 import re
 import os
@@ -17,8 +18,10 @@ class goodbot(object):
 		config = config["api"]
 		self.bot_mail = config.get("email")
 		self.client = zulip.Client(config_file=config_file)
-		with open(os.path.join(os.path.dirname(__file__), "..", "templates", "faq.json")) as file:
+		with open(Path(__file__).parents[1].joinpath("templates", "faq.json")) as file:
 			self.faqs = json.load(file)
+		with open(Path(__file__).parents[1].joinpath("templates", "replies.json")) as file:
+			self.replies = json.load(file)
 		self.questions = list(question for question in self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.subscribe_all()
@@ -67,7 +70,7 @@ class goodbot(object):
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"Hey {username} ! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoD proposals, type `!help gsod`.\nIf you need any help with GSoC proposals, type `!help gsoc`.\nIf you need help with Outreachy proposals, type `!help outreachy`.\nYou can join the #**technical-support** channel to get technical help related to Wikimedia infrastructure.\nType `!help` for a full list of available commands. :blush:"
+					"content": f"Hey {username}! Welcome to Wikimedia Zulipchat.\nIf you need any help with GSoD proposals, type `!help gsod`.\nIf you need any help with GSoC proposals, type `!help gsoc`.\nIf you need help with Outreachy proposals, type `!help outreachy`.\nYou can join the #**technical-support** channel to get technical help related to Wikimedia infrastructure.\nType `!help` for a full list of available commands. :blush:"
 				})
 
 			if content[0].lower() == "!help" or content[0] == "@**goodbot**":
@@ -76,7 +79,7 @@ class goodbot(object):
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"Hey there, @**{sender_full_name}** ! :blush: Here's what I can do for you:\nType `!help gsod` for help with GSoD proposals.\nType `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help faq 'your question'` to search FAQs.\nType `!help wikipedia 'title'` to search articles.\nType `!help stackoverflow 'your question'` to search questions.\nType `!help chat mediawiki` to get help regarding MediaWiki software.\nType `!help chat wikimedia` to get technical help regarding Wikimedia. You can also join the #**technical-support** channel to get technical help related to Wikimedia infrastructure."
+						"content": f"Hey there, @**{sender_full_name}**! :blush: Here's what I can do for you:\nType `!help gsod` for help with GSoD proposals.\nType `!help gsoc` for help with GSoC proposals.\nType `!help outreachy` for help with Outreachy proposals.\nType `!help faq 'your question'` to search FAQs.\nType `!help wikipedia 'title'` to search articles.\nType `!help stackoverflow 'your question'` to search questions.\nType `!help chat mediawiki` to get help regarding MediaWiki software.\nType `!help chat wikimedia` to get technical help regarding Wikimedia. You can also join the #**technical-support** channel to get technical help related to Wikimedia infrastructure."
 					})
 				elif(len(content) > 1):
 					if content[1].lower() == "gsoc":
@@ -85,7 +88,7 @@ class goodbot(object):
 							"type": message_type,
 							"topic": topic,
 							"to": destination,
-							"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
+							"content": f"Hello @**{sender_full_name}**! Here are some links to get you started.\nRead the information guide for GSoC participants: https://www.mediawiki.org/wiki/Google_Summer_of_Code/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
 						})
 					if content[1].lower() == "gsod":
 						self.subscribe_user("gsod20", sender_email)
@@ -93,7 +96,7 @@ class goodbot(object):
 							"type": message_type,
 							"topic": topic,
 							"to": destination,
-							"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for GSoD participants: https://www.mediawiki.org/wiki/Season_of_Docs/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Season_of_Docs/2020\nYou have been subscribed to the #**gsod20** stream for further help."
+							"content": f"Hello @**{sender_full_name}**! Here are some links to get you started.\nRead the information guide for GSoD participants: https://www.mediawiki.org/wiki/Season_of_Docs/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Season_of_Docs/2020\nYou have been subscribed to the #**gsod20** stream for further help."
 						})
 					if content[1].lower() == "outreachy":
 						self.subscribe_user("gsoc20-outreachy20", sender_email)
@@ -101,7 +104,7 @@ class goodbot(object):
 							"type": message_type,
 							"topic": topic,
 							"to": destination,
-							"content": f"Hello @**{sender_full_name}** ! Here are some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
+							"content": f"Hello @**{sender_full_name}**! Here are some links to get you started.\nRead the information guide for Outreachy participants: https://www.mediawiki.org/wiki/Outreachy/Participants\nRead the project ideas for this year: https://www.mediawiki.org/wiki/Outreachy/Round_20\nYou have been subscribed to the #**gsoc20-outreachy20** stream for further help."
 						})
 					if content[1].lower() == "faq":
 						if(len(content) == 2):
@@ -109,7 +112,7 @@ class goodbot(object):
 								"type": message_type,
 								"topic": topic,
 								"to": destination,
-								"content": f"Hello @**{sender_full_name}** ! You can ask me a question by adding the question after the command: `!help faq 'your question'`"
+								"content": f"Hello @**{sender_full_name}**! You can ask me a question by adding the question after the command: `!help faq 'your question'`"
 							})
 							return
 						lookup = self.fuzzymatch(" ".join(content[2:]))
@@ -120,7 +123,7 @@ class goodbot(object):
 								"type": message_type,
 								"topic": topic,
 								"to": destination,
-								"content": f"Hello @**{sender_full_name}** ! {lookup}"
+								"content": f"Hello @**{sender_full_name}**! {lookup}"
 							})
 					if content[1].lower() == "wikipedia":
 						if(len(content) == 2):
@@ -128,14 +131,14 @@ class goodbot(object):
 								"type": message_type,
 								"topic": topic,
 								"to": destination,
-								"content": f"Hello @**{sender_full_name}** ! You can make me search Wikipedia by adding the query after the command: `!help wikipedia 'your query'`"
+								"content": f"Hello @**{sender_full_name}**! You can make me search Wikipedia by adding the query after the command: `!help wikipedia 'your query'`"
 							})
 							return
 						self.client.send_message({
 							"type": message_type,
 							"topic": topic,
 							"to": destination,
-							"content": f"Hello @**{sender_full_name}** ! This might take a while to process :time_ticking:"
+							"content": f"Hello @**{sender_full_name}**! This might take a while to process :time_ticking:"
 						})
 						query = " ".join(content[2:])
 						self.client.send_message({
@@ -167,7 +170,7 @@ class goodbot(object):
 							"type": message_type,
 							"topic": topic,
 							"to": destination,
-							"content": f"Hello @**{sender_full_name}** ! This might take a while to process :time_ticking:"
+							"content": f"Hello @**{sender_full_name}**! This might take a while to process :time_ticking:"
 						})
 						query = ' '.join(content[2:])
 						stackoverflow = StackAPI('stackoverflow')
