@@ -146,7 +146,7 @@ class goodbot(object):
 					"to": destination,
 					"content": f"{greeting} {self.replies['wait']}"
 				})
-				query = " ".join(content[2:])
+				query = " ".join(content[1:])
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
@@ -178,7 +178,7 @@ class goodbot(object):
 					"to": destination,
 					"content": f"{greeting} This might take a while to process :time_ticking:"
 				})
-				query = ' '.join(content[2:])
+				query = ' '.join(content[1:])
 				stackoverflow = StackAPI('stackoverflow')
 				stackoverflow.page_size = 3  # lesser, the faster
 				stackoverflow.max_pages = 1  # will hit API only once
