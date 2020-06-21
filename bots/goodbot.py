@@ -176,7 +176,7 @@ class goodbot(object):
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} This might take a while to process :time_ticking:"
+					"content": f"{greeting} {self.replies['wait']}"
 				})
 				query = ' '.join(content[1:])
 				stackoverflow = StackAPI('stackoverflow')
@@ -203,7 +203,7 @@ class goodbot(object):
 						"type": message_type,
 						"to": destination,
 						"topic": topic,
-						"content": f"{greeting} {self.replies['chat']}"
+						"content": f"{greeting} {self.replies['chathelp']}"
 					})
 					return
 				if(content[2].lower() == "wikimedia"):
