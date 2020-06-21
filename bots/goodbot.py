@@ -85,140 +85,143 @@ class goodbot(object):
 						"content": f"{greeting} {self.replies['helptext']}"
 					})
 				elif(len(content) > 1):
-					if content[1].lower() == "gsoc":
-						self.subscribe_user("gsoc20-outreachy20", sender_email)
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": f"{greeting} {self.replies['gsoc']}"
-						})
-					if content[1].lower() == "gsod":
-						self.subscribe_user("gsod20", sender_email)
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": f"{greeting} {self.replies['gsod']}"
-						})
-					if content[1].lower() == "outreachy":
-						self.subscribe_user("gsoc20-outreachy20", sender_email)
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": f"{greeting} {self.replies['outreachy']}"
-						})
-					if content[1].lower() == "faq":
-						if(len(content) == 2):
-							self.client.send_message({
-								"type": message_type,
-								"topic": topic,
-								"to": destination,
-								"content": f"{greeting} You can ask me a question by adding the question after the command: `!help faq 'your question'`"
-							})
-							return
-						lookup = self.fuzzymatch(" ".join(content[2:]))
-						if lookup is None:
-							return
-						else:
-							self.client.send_message({
-								"type": message_type,
-								"topic": topic,
-								"to": destination,
-								"content": f"{greeting} {lookup}"
-							})
-					if content[1].lower() == "wikipedia":
-						if(len(content) == 2):
-							self.client.send_message({
-								"type": message_type,
-								"topic": topic,
-								"to": destination,
-								"content": f"{greeting} You can make me search Wikipedia by adding the query after the command: `!help wikipedia 'your query'`"
-							})
-							return
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": f"{greeting} {self.replies['wait']}"
-						})
-						query = " ".join(content[2:])
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": f"{greeting} Got it! :point_right: {wikipedia.summary(query, sentences=2)}"  # summary is a very slow call
-						})
-						response = ""
-						for result in wikipedia.search(query, results=1):
-							page = wikipedia.page(result)
-							response += f"* [{page.title}]({page.url})"
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": response
-						})
-					if content[1].lower() == "stackoverflow":
-						if(len(content) == 2):
-							self.client.send_message({
-								"type": message_type,
-								"topic": topic,
-								"to": destination,
-								"content": f"{greeting} You can make me search StackOverflow by adding the query after the command: `!help stackoverflow 'your query'`"
-							})
-							return
-						self.client.send_message({
-							"type": message_type,
-							"topic": topic,
-							"to": destination,
-							"content": f"{greeting} This might take a while to process :time_ticking:"
-						})
-						query = ' '.join(content[2:])
-						stackoverflow = StackAPI('stackoverflow')
-						stackoverflow.page_size = 3  # lesser, the faster
-						stackoverflow.max_pages = 1  # will hit API only once
-						questions = stackoverflow.fetch('search/advanced', sort="relevance", q=query, order="desc", answers=1)
-						response = f"**Closest match:** {questions['items'][0]['title']}"
-						try:
-							answerjson = stackoverflow.fetch('answers/{ids}', ids=[str(questions['items'][0]['accepted_answer_id'])], filter="!9Z(-wzftf")  # filter code: default+"answer.body_markdown"
-							answer = "\n**Accepted answer:**\n" + answerjson['items'][0]['body_markdown']
-						except IndexError:  # faster than checking if index exists
-							answer = "\n**No accepted answer found**"
-						response += f"{answer}\nOther questions:\n"
-						response += "\n".join((f"* [{question['title']}]({question['link']})") for question in questions['items'][1:])
-						self.client.send_message({
-							"type": message_type,
-							"to": destination,
-							"topic": topic,
-							"content": f"{greeting} Got it! :point_down:\n{response}"
-						})
-					if content[1].lower() == "chat":
-						if(len(content) == 2):  # TODO: bunch all error control into one
-							self.client.send_message({
-								"type": message_type,
-								"to": destination,
-								"topic": topic,
-								"content": f"{greeting} {self.replies['chat']}"
-							})
-							return
-						if(content[2].lower() == "wikimedia"):
-							self.subscribe_user("technical-support", sender_email)
-							self.client.send_message({
-								"type": message_type,
-								"to": destination,
-								"topic": topic,
-								"content": f"{greeting} {self.replies['wikimedia']}"
-							})
-						if(content[2].lower() == "mediawiki"):
-							self.subscribe_user("technical-support", sender_email)
-							self.client.send_message({
-								"type": message_type,
-								"to": destination,
-								"topic": topic,
-								"content": f"{greeting} {self.replies['mediawiki']}"
-							})
+					content = content[1:]
+					content[0] = f"!{content[0]}"
+
+			if content[0].lower() == "!gsoc":
+				self.subscribe_user("gsoc20-outreachy20", sender_email)
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} {self.replies['gsoc']}"
+				})
+			elif content[0].lower() == "!gsod":
+				self.subscribe_user("gsod20", sender_email)
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} {self.replies['gsod']}"
+				})
+			elif content[0].lower() == "!outreachy":
+				self.subscribe_user("gsoc20-outreachy20", sender_email)
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} {self.replies['outreachy']}"
+				})
+			elif content[0].lower() == "!faq":
+				if(len(content) == 1):
+					self.client.send_message({
+						"type": message_type,
+						"topic": topic,
+						"to": destination,
+						"content": f"{greeting} You can ask me a question by adding the question after the command: `!help faq 'your question'`"
+					})
+					return
+				lookup = self.fuzzymatch(" ".join(content[2:]))
+				if lookup is None:
+					return
+				else:
+					self.client.send_message({
+						"type": message_type,
+						"topic": topic,
+						"to": destination,
+						"content": f"{greeting} {lookup}"
+					})
+			elif content[0].lower() == "!wikipedia":
+				if(len(content) == 1):
+					self.client.send_message({
+						"type": message_type,
+						"topic": topic,
+						"to": destination,
+						"content": f"{greeting} You can make me search Wikipedia by adding the query after the command: `!help wikipedia 'your query'`"
+					})
+					return
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} {self.replies['wait']}"
+				})
+				query = " ".join(content[2:])
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} Got it! :point_right: {wikipedia.summary(query, sentences=2)}"  # summary is a very slow call
+				})
+				response = ""
+				for result in wikipedia.search(query, results=1):
+					page = wikipedia.page(result)
+					response += f"* [{page.title}]({page.url})"
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": response
+				})
+			elif content[0].lower() == "!stackoverflow":
+				if(len(content) == 1):
+					self.client.send_message({
+						"type": message_type,
+						"topic": topic,
+						"to": destination,
+						"content": f"{greeting} You can make me search StackOverflow by adding the query after the command: `!help stackoverflow 'your query'`"
+					})
+					return
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} This might take a while to process :time_ticking:"
+				})
+				query = ' '.join(content[2:])
+				stackoverflow = StackAPI('stackoverflow')
+				stackoverflow.page_size = 3  # lesser, the faster
+				stackoverflow.max_pages = 1  # will hit API only once
+				questions = stackoverflow.fetch('search/advanced', sort="relevance", q=query, order="desc", answers=1)
+				response = f"**Closest match:** {questions['items'][0]['title']}"
+				try:
+					answerjson = stackoverflow.fetch('answers/{ids}', ids=[str(questions['items'][0]['accepted_answer_id'])], filter="!9Z(-wzftf")  # filter code: default+"answer.body_markdown"
+					answer = "\n**Accepted answer:**\n" + answerjson['items'][0]['body_markdown']
+				except IndexError:  # faster than checking if index exists
+					answer = "\n**No accepted answer found**"
+				response += f"{answer}\nOther questions:\n"
+				response += "\n".join((f"* [{question['title']}]({question['link']})") for question in questions['items'][1:])
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{greeting} Got it! :point_down:\n{response}"
+				})
+			elif content[0].lower() == "!chat":
+				if(len(content) == 1):
+					self.client.send_message({
+						"type": message_type,
+						"to": destination,
+						"topic": topic,
+						"content": f"{greeting} {self.replies['chat']}"
+					})
+					return
+				if(content[2].lower() == "wikimedia"):
+					self.subscribe_user("technical-support", sender_email)
+					self.client.send_message({
+						"type": message_type,
+						"to": destination,
+						"topic": topic,
+						"content": f"{greeting} {self.replies['wikimedia']}"
+					})
+				if(content[2].lower() == "mediawiki"):
+					self.subscribe_user("technical-support", sender_email)
+					self.client.send_message({
+						"type": message_type,
+						"to": destination,
+						"topic": topic,
+						"content": f"{greeting} {self.replies['mediawiki']}"
+					})
 			elif "goodbot" in content and content[0] != "!help":
 				self.client.send_message({
 					"type": message_type,
