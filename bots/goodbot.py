@@ -71,9 +71,9 @@ class goodbot(object):
 					username = "@" + username.group(0)
 				self.client.send_message({
 					"type": message_type,
-					"topic": topic,
-					"to": destination,
-					"content": f"{greeting} {self.replies['welcome']}"
+					"topic": "Getting Started",
+					"to": "General",
+					"content": f"{username} {self.replies['welcome']}"
 				})
 
 			if content[0].lower() == "!help" or content[0] == "@**goodbot**":
