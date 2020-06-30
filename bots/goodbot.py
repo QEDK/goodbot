@@ -63,21 +63,14 @@ class goodbot(object):
 
 		try:
 			greeting = f"{random.choice(self.greetings)} @**{sender_full_name}**!"
-			if sender_email == "1994constant@gmail.com" and topic == "signups":  # hack for reading #announce stream
+			if sender_email == "notification-bot@zulip.com" and topic == "signups":  # hack for reading #announce stream
 				userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"])
 				if userid is None:
 					return
 				self.client.send_message({
-<<<<<<< Updated upstream
-					"type": message_type,
-					"topic": topic,
-					"to": destination,
-					"content": f"{greeting} {self.replies['welcome']}"
-=======
 					"type": "private",
 					"to": f"[{userid.group('id')}]",
 					"content": f"{self.replies['welcome']}"
->>>>>>> Stashed changes
 				})
 
 			if content[0].lower() == "!help" or content[0] == "@**goodbot**":
