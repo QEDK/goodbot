@@ -203,7 +203,7 @@ class goodbot(object):
 						"content": f"{greeting} {self.replies['chathelp']}"
 					})
 					return
-				if(content[2].lower() == "wikimedia"):
+				if(content[1].lower() == "wikimedia"):
 					self.subscribe_user("technical-support", sender_email)
 					self.client.send_message({
 						"type": message_type,
@@ -211,7 +211,7 @@ class goodbot(object):
 						"topic": topic,
 						"content": f"{greeting} {self.replies['wikimedia']}"
 					})
-				if(content[2].lower() == "mediawiki"):
+				if(content[1].lower() == "mediawiki"):
 					self.subscribe_user("technical-support", sender_email)
 					self.client.send_message({
 						"type": message_type,
