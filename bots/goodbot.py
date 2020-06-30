@@ -64,16 +64,13 @@ class goodbot(object):
 		try:
 			greeting = f"{random.choice(self.greetings)} @**{sender_full_name}**!"
 			if sender_email == "notification-bot@zulip.com" and topic == "signups":  # hack for reading #announce stream
-				username = re.search(r"\*\*.*\*\*", msg["content"])
-				if username is None:
+				userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"])
+				if userid is None:
 					return
-				else:
-					username = "@" + username.group(0)
 				self.client.send_message({
-					"type": message_type,
-					"topic": "Getting Started",
-					"to": "General",
-					"content": f"{username} {self.replies['welcome']}"
+					"type": "private",
+					"to": f"[{userid.group('id')}]",
+					"content": f"{self.replies['welcome']}"
 				})
 
 			if content[0].lower() == "!help" or content[0] == "@**goodbot**":
