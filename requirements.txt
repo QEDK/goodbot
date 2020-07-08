@@ -4,6 +4,7 @@ cffi==1.14.0
 chardet==3.0.4
 cryptography==2.9.2
 distro==1.5.0
+html2text==2020.1.16
 idna==2.10
 importlib-metadata==1.7.0
 irc==18.0.0
