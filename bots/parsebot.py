@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import requests
 import html2text
+from github import Github
 import json
 from pathlib import Path
 import re
@@ -31,5 +32,8 @@ while True:
 		projects[match.group("title").strip()] = match.group("inner").strip()
 		continue
 
-with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "w") as outfile:
-	json.dump(projects, outfile, indent="\t")
+with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "w+") as outfile:
+	current = json.load(outfile)
+	if current == projects:
+		exit(0)
+	json.dump(projects, outfile, indent="\t", sort_keys=True)
