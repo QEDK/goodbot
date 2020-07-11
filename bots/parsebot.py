@@ -34,7 +34,6 @@ def scan(r):
 			text = html2text.HTML2Text().handle(req.json()["parse"]["text"]["*"])
 			match = re.search(r"#{1,}(?P<title>.*?\n)(?P<inner>.*)", text, flags=re.DOTALL)
 			projects[match.group("title").strip()] = match.group("inner").strip()
-			continue
 
 	with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "r") as outfile:
 		current = json.load(outfile)
