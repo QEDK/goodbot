@@ -33,3 +33,4 @@ wikipedia==1.4.0
 wrapt==1.12.1
 zipp==3.1.0
 zulip==0.7.0
+nose==1.3.7
