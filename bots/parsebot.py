@@ -61,13 +61,11 @@ def make_pull():
 
 
 def monitor(session, repo, pull):
+	if repo.get_pull(pull.number).state == "closed":
+		subprocess.run(shlex.split("git push origin -d parsebot"))
+		return False
 	if scan(session):
 		commit(first=False)
-		if repo.get_pull(pull.number).state == "closed":
-			commands = ["git push origin -d parsebot", "git stash", "git checkout master", "git branch -D parsebot"]
-			for cmd in commands:
-				subprocess.run(shlex.split(cmd))
-			return False
 	return True
 
 
