@@ -8,6 +8,7 @@ from irc.client_aio import AioReactor
 import multiprocessing as mp
 from typing import Any, Dict
 import configparser
+import asyncio
 import re
 import os
 
@@ -36,7 +37,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		# type: (*Any, **Any) -> None
 		# https://github.com/jaraco/irc/blob/master/irc/client_aio.py
 		try:
-			self.reactor.loop.run_until_complete(self.connection.connect(self.server, self.port, self.nickname, password=self.password, **kwargs))
+			asyncio.get_event_loop().run_until_complete(self.connection.connect(self.server, self.port, self.nickname, password=self.password, **kwargs))
 		except irc.client.ServerConnectionError as e:
 			print(e)
 			raise SystemExit(1)

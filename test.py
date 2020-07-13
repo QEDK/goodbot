@@ -7,7 +7,7 @@ import signal
 def test_zulip():
 	proc = subprocess.Popen(["python3", "-u", "bots/goodbot.py"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	try:
-		outs, errs = proc.communicate(timeout=5)
+		outs, errs = proc.communicate(timeout=10)
 	except subprocess.TimeoutExpired:
 		proc.kill()
 		outs, errs = proc.communicate()
