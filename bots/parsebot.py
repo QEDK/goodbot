@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 from github import Github
 from pathlib import Path
-import subprocess
+from requests import Session
 import html2text
-import requests
-import shlex
 import json
-import time
-import re
 import os
+import re
+import shlex
+import subprocess
+import time
 
 
-def scan(r):
-	projects = dict()
+def scan(session):
+	projects = {}
 	i = 0
 	while True:
 		i += 1
@@ -26,7 +26,7 @@ def scan(r):
 			"disabletoc": "true",
 			"format": "json"
 		}
-		req = r.get(url="https://www.mediawiki.org/w/api.php", params=params)
+		req = session.get(url="https://www.mediawiki.org/w/api.php", params=params)
 		try:
 			if req.json()["error"]:
 				break
@@ -70,7 +70,7 @@ def monitor(session, repo, pull):
 
 
 def main():
-	session = requests.Session()
+	session = Session()
 	if scan(session):
 		commit(first=True)
 		repo, pull = make_pull()
