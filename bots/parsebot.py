@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-from github import Github
-from pathlib import Path
-from requests import Session
 import html2text
 import json
 import os
@@ -9,6 +6,9 @@ import re
 import shlex
 import subprocess
 import time
+from github import Github
+from pathlib import Path
+from requests import Session
 
 
 def scan(session):
