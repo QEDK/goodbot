@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-import zulip
+import asyncio
+import configparser
 import irc.bot
-from irc.bot import ExponentialBackoff
 import irc.strings
+import multiprocessing as mp
+import os
+import re
+import zulip
+from irc.bot import ExponentialBackoff
 from irc.client import ip_numstr_to_quad, Event, ServerConnection
 from irc.client_aio import AioReactor
-import multiprocessing as mp
 from typing import Any, Dict
-import configparser
-import re
-import os
 
 
 class IRCBot(irc.bot.SingleServerIRCBot):
@@ -34,9 +35,8 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 	def connect(self, *args, **kwargs):
 		# type: (*Any, **Any) -> None
-		# https://github.com/jaraco/irc/blob/master/irc/client_aio.py
 		try:
-			self.reactor.loop.run_until_complete(self.connection.connect(self.server, self.port, self.nickname, password=self.password, **kwargs))
+			asyncio.get_event_loop().run_until_complete(self.connection.connect(self.server, self.port, self.nickname, password=self.password, **kwargs))
 		except irc.client.ServerConnectionError as e:
 			print(e)
 			raise SystemExit(1)
@@ -102,7 +102,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 			"content": f"[irc] <{sender}> {content}"
 		}))
 
-	def on_dccmsg(self, c, e):  # DCC<->Zulip compat not checked yet
+	def on_dccmsg(self, c, e):
 		# type: (ServerConnection, Event) -> None
 		c.privmsg(f"You said: {e.arguments[0]}")
 
