@@ -228,10 +228,11 @@ class goodbot(object):
 						response += f"{idx + 1} {title}\n"
 					response += "You can see more details about the project by typing: `!projects <number>`."
 				else:
-					choice = re.match(r"\d?", content[1])
+					choice = re.match(r"\d{1,}", content[1])
 					if choice is not None:
 						try:
-							response = self.projects[self.projects.keys()[int(choice.group(0)) - 1]]
+							title = list(self.projects)[int(choice.group(0)) - 1]
+							response = f"{title}\n {self.projects[title]}"
 						except IndexError:
 							response = "Invalid project number was entered."
 					else:
