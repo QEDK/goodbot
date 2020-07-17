@@ -238,11 +238,11 @@ class goodbot(object):
 					else:
 						response = "You can see more details about the project by typing: `!projects <number>`."
 				self.client.send_message({
-						"type": message_type,
-						"to": destination,
-						"topic": topic,
-						"content": f"{greeting} {response}"
-					})
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{greeting} {response}"
+				})
 			elif "goodbot" in content and content[0] != "!help":
 				self.client.send_message({
 					"type": message_type,
