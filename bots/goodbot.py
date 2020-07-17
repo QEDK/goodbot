@@ -223,7 +223,7 @@ class goodbot(object):
 					})
 			elif content[0].lower() == "!projects":
 				if len(content) == 1:
-					response = f"Here's the list of projects:\n"
+					response = "Here's the list of projects:\n"
 					for idx, title in enumerate(self.projects):
 						response += f"{idx + 1}. {title}\n"
 					response += "You can see more details about the project by typing: `!projects <number>`."
