@@ -23,6 +23,8 @@ class goodbot(object):
 			self.faqs = json.load(file)
 		with open(Path(__file__).parents[1].joinpath("templates", "replies.json")) as file:
 			self.replies = json.load(file)
+		with open(Path(__file__).parents[1].joinpath("templates", "projects.json")) as file:
+			self.projects = json.load(file)
 		self.questions = list(question for question in self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.greetings = self.replies["greetings"].split(";")
@@ -218,6 +220,27 @@ class goodbot(object):
 						"to": destination,
 						"topic": topic,
 						"content": f"{greeting} {self.replies['mediawiki']}"
+					})
+			elif content[0].lower() == "!projects":
+				if len(content) == 1:
+					response = f"Here's the list of projects:\n"
+					for idx, title in enumerate(self.projects):
+						response += f"{idx + 1} {title}\n"
+					response += "You can see more details about the project by typing: `!projects <number>`."
+				else:
+					choice = re.match(r"\d?", content[1])
+					if choice is not None:
+						try:
+							response = self.projects[self.projects.keys()[int(choice.group(0)) - 1]]
+						except IndexError:
+							response = "Invalid project number was entered."
+					else:
+						response = "You can see more details about the project by typing: `!projects <number>`."
+				self.client.send_message({
+						"type": message_type,
+						"to": destination,
+						"topic": topic,
+						"content": f"{greeting} {response}"
 					})
 			elif "goodbot" in content and content[0] != "!help":
 				self.client.send_message({
