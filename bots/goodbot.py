@@ -232,7 +232,7 @@ class goodbot(object):
 					if choice is not None:
 						try:
 							title = list(self.projects)[int(choice.group(0)) - 1]
-							response = f"{title}\n {self.projects[title]}"
+							response = f"**{title}**\n {self.projects[title]}"
 						except IndexError:
 							response = "Invalid project number was entered."
 					else:
