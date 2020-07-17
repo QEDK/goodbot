@@ -225,10 +225,10 @@ class goodbot(object):
 				if len(content) == 1:
 					response = f"Here's the list of projects:\n"
 					for idx, title in enumerate(self.projects):
-						response += f"{idx + 1} {title}\n"
+						response += f"{idx + 1}. {title}\n"
 					response += "You can see more details about the project by typing: `!projects <number>`."
 				else:
-					choice = re.match(r"\d{1,}", content[1])
+					choice = re.match(r"\d+", content[1])
 					if choice is not None:
 						try:
 							title = list(self.projects)[int(choice.group(0)) - 1]
