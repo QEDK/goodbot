@@ -14,26 +14,29 @@ from requests import Session
 def scan(session):
 	projects = {}
 	i = 0
-	while True:
-		i += 1
-		params = {
-			"action": "parse",
-			"page": "Google Summer of Code/2020/Ideas for projects",
-			"section": i,
-			"prop": "text",
-			"disablelimitreport": "true",
-			"disableeditsection": "true",
-			"disabletoc": "true",
-			"format": "json"
-		}
-		req = session.get(url="https://www.mediawiki.org/w/api.php", params=params)
-		try:
-			if req.json()["error"]:
-				break
-		except KeyError:
-			text = html2text.HTML2Text().handle(req.json()["parse"]["text"]["*"])
-			match = re.search(r"#{1,}(?P<title>.*?\n)(?P<inner>.*)", text, flags=re.DOTALL)
-			projects[match.group("title").strip()] = match.group("inner").strip()
+	with open(Path(__file__).parents[1].joinpath("config", "pages.json"), "r") as file:
+		ideapages = json.load(file)
+	for key in ideapages:
+		while True:
+			i += 1
+			params = {
+				"action": "parse",
+				"page": ideapages[key],
+				"section": i,
+				"prop": "text",
+				"disablelimitreport": "true",
+				"disableeditsection": "true",
+				"disabletoc": "true",
+				"format": "json"
+			}
+			req = session.get(url="https://www.mediawiki.org/w/api.php", params=params)
+			try:
+				if req.json()["error"]:
+					break
+			except KeyError:
+				text = html2text.HTML2Text().handle(req.json()["parse"]["text"]["*"])
+				match = re.search(r"#{1,}(?P<title>.*?\n)(?P<inner>.*)", text, flags=re.DOTALL)
+				projects[key][match.group("title").strip()] = match.group("inner").strip()
 
 	with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "r") as outfile:
 		current = json.load(outfile)
