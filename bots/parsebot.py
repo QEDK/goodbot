@@ -17,6 +17,7 @@ def scan(session):
 	with open(Path(__file__).parents[1].joinpath("config", "pages.json"), "r") as file:
 		ideapages = json.load(file)
 	for key in ideapages:
+		projects[key] = {}
 		while True:
 			i += 1
 			params = {
@@ -36,7 +37,7 @@ def scan(session):
 			except KeyError:
 				text = html2text.HTML2Text().handle(req.json()["parse"]["text"]["*"])
 				match = re.search(r"#{1,}(?P<title>.*?\n)(?P<inner>.*)", text, flags=re.DOTALL)
-				projects[key][match.group("title").strip()] = match.group("inner").strip()
+				projects[key].update({match.group("title").strip(): match.group("inner").strip()})
 
 	with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "r") as outfile:
 		current = json.load(outfile)
