@@ -13,11 +13,11 @@ from requests import Session
 
 def scan(session):
 	projects = {}
-	i = 0
 	with open(Path(__file__).parents[1].joinpath("config", "pages.json"), "r") as file:
 		ideapages = json.load(file)
 	for key in ideapages:
 		projects[key] = {}
+		i = 0
 		while True:
 			i += 1
 			params = {
