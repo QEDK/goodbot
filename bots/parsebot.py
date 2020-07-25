@@ -13,7 +13,7 @@ from requests import Session
 
 def scan(session):
 	projects = {}
-	with open(Path(__file__).parents[1].joinpath("config", "pages.json"), "r") as file:
+	with open(str(Path(__file__).parents[1].joinpath("config", "pages.json")), "r") as file:
 		ideapages = json.load(file)
 	for key in ideapages:
 		projects[key] = {}
@@ -39,12 +39,12 @@ def scan(session):
 				match = re.search(r"#{1,}(?P<title>.*?\n)(?P<inner>.*)", text, flags=re.DOTALL)
 				projects[key].update({match.group("title").strip(): match.group("inner").strip()})
 
-	with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "r") as outfile:
+	with open(str(Path(__file__).parents[1].joinpath("templates", "projects.json")), "r") as outfile:
 		current = json.load(outfile)
 		if current == projects:
 			return False
 
-	with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "w") as outfile:
+	with open(str(Path(__file__).parents[1].joinpath("templates", "projects.json")), "w") as outfile:
 		json.dump(projects, outfile, indent="\t", sort_keys=True)
 		return True
 
