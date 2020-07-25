@@ -54,7 +54,7 @@ def commit(first):
 		commands = ["git pull origin", "git checkout -b parsebot"]
 		for cmd in commands:
 			subprocess.run(shlex.split(cmd))
-	commands = ["git add templates/projects.json", "git commit -m Update projects.json", "git push origin parsebot"]
+	commands = ["git add templates/projects.json", "git commit -m \"Update projects.json\"", "git push origin parsebot"]
 	for cmd in commands:
 		subprocess.run(shlex.split(cmd))
 
