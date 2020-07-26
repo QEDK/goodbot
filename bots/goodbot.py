@@ -25,6 +25,12 @@ class goodbot(object):
 			self.replies = json.load(file)
 		with open(Path(__file__).parents[1].joinpath("templates", "projects.json")) as file:
 			self.projects = json.load(file)
+			self.flatprojects = {}
+			idx = 1
+			for key in self.projects:
+				for title in self.projects[key]:
+					self.flatprojects[idx] = (title, self.projects[key][title])
+					idx += 1
 		self.questions = list(question for question in self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.greetings = self.replies["greetings"].split(";")
@@ -238,15 +244,8 @@ class goodbot(object):
 					choice = re.match(r"\d+", content[1])
 					if choice is not None:
 						try:
-							idx = len(self.projects["gsocideas"])
-							choice = int(choice.group(0)) - 1
-							if choice >= idx:
-								choice -= idx
-								key = "outreachyideas"
-							else:
-								key = "gsocideas"
-							title = list(self.projects[key])[choice]
-							response = f"**{title}**\n {self.projects[key][title]}"
+							title, description = self.flatprojects[int(choice.group(0))]
+							response = f"**{title}**\n {description}"
 						except IndexError:
 							response = "Invalid project number was entered."
 					else:
