@@ -224,15 +224,29 @@ class goodbot(object):
 			elif content[0].lower() == "!projects":
 				if len(content) == 1:
 					response = "Here's the list of projects:\n"
-					for idx, title in enumerate(self.projects):
-						response += f"{idx + 1}. {title}\n"
+					idx = 1
+					for key in self.projects:
+						if key == "gsocideas":
+							response += "**Google Summer of Code -**\n"
+						else:
+							response += "**Outreachy -**\n"
+						for title in self.projects[key]:
+							response += f"{idx}. {title}\n"
+							idx += 1
 					response += "You can see more details about the project by typing: `!projects <number>`."
 				else:
 					choice = re.match(r"\d+", content[1])
 					if choice is not None:
 						try:
-							title = list(self.projects)[int(choice.group(0)) - 1]
-							response = f"**{title}**\n {self.projects[title]}"
+							idx = len(self.projects["gsocideas"])
+							choice = int(choice.group(0)) - 1
+							if choice >= idx:
+								choice -= idx
+								key = "outreachyideas"
+							else:
+								key = "gsocideas"
+							title = list(self.projects[key])[choice]
+							response = f"**{title}**\n {self.projects[key][title]}"
 						except IndexError:
 							response = "Invalid project number was entered."
 					else:
