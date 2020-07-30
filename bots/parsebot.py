@@ -14,8 +14,8 @@ from requests import Session
 def scan(session):
 	projects = {}
 	i = 0
-	with open(Path(__file__).parents[1].joinpath("config", "pages.json"), "r") as file:
-		ideapages = json.load(file)
+	with open(Path(__file__).parents[1].joinpath("config", "config.json"), "r") as file:
+		ideapages = json.load(file)["ideas"]
 	for key in ideapages:
 		while True:
 			i += 1
