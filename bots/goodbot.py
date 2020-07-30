@@ -27,7 +27,7 @@ class goodbot(object):
 			self.projects = json.load(file)
 		self.questions = list(question for question in self.faqs["questions"])
 		self.answers = self.faqs["answers"]
-		self.greetings = self.replies["greetings"].split(";")
+		self.greetings = self.replies["greetings"]
 		self.subscribe_all()
 		print("Bot init complete")
 
