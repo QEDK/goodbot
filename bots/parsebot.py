@@ -13,10 +13,11 @@ from requests import Session
 
 def scan(session):
 	projects = {}
-	i = 0
 	with open(Path(__file__).parents[1].joinpath("config", "config.json"), "r") as file:
 		ideapages = json.load(file)["ideas"]
 	for key in ideapages:
+		projects[key] = {}
+		i = 0
 		while True:
 			i += 1
 			params = {
@@ -36,14 +37,14 @@ def scan(session):
 			except KeyError:
 				text = html2text.HTML2Text().handle(req.json()["parse"]["text"]["*"])
 				match = re.search(r"#{1,}(?P<title>.*?\n)(?P<inner>.*)", text, flags=re.DOTALL)
-				projects[key][match.group("title").strip()] = match.group("inner").strip()
+				projects[key].update({match.group("title").strip(): match.group("inner").strip()})
 
-	with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "r") as outfile:
+	with open(str(Path(__file__).parents[1].joinpath("templates", "projects.json")), "r") as outfile:
 		current = json.load(outfile)
 		if current == projects:
 			return False
 
-	with open(Path(__file__).parents[1].joinpath("templates", "projects.json"), "w") as outfile:
+	with open(str(Path(__file__).parents[1].joinpath("templates", "projects.json")), "w") as outfile:
 		json.dump(projects, outfile, indent="\t", sort_keys=True)
 		return True
 
@@ -53,7 +54,7 @@ def commit(first):
 		commands = ["git pull origin", "git checkout -b parsebot"]
 		for cmd in commands:
 			subprocess.run(shlex.split(cmd))
-	commands = ["git add templates/projects.json", "git commit -m Update projects.json", "git push origin parsebot"]
+	commands = ["git add templates/projects.json", "git commit -m \"Update projects.json\"", "git push origin parsebot"]
 	for cmd in commands:
 		subprocess.run(shlex.split(cmd))
 

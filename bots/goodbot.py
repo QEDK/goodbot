@@ -25,6 +25,12 @@ class goodbot(object):
 			self.replies = json.load(file)
 		with open(Path(__file__).parents[1].joinpath("templates", "projects.json")) as file:
 			self.projects = json.load(file)
+			self.flatprojects = {}
+			idx = 1
+			for key in self.projects:
+				for title in self.projects[key]:
+					self.flatprojects[idx] = (title, self.projects[key][title])
+					idx += 1
 		self.questions = list(question for question in self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.greetings = self.replies["greetings"]
@@ -224,15 +230,22 @@ class goodbot(object):
 			elif content[0].lower() == "!projects":
 				if len(content) == 1:
 					response = "Here's the list of projects:\n"
-					for idx, title in enumerate(self.projects):
-						response += f"{idx + 1}. {title}\n"
+					idx = 1
+					for key in self.projects:
+						if key == "gsocideas":
+							response += "**Google Summer of Code -**\n"
+						else:
+							response += "**Outreachy -**\n"
+						for title in self.projects[key]:
+							response += f"{idx}. {title}\n"
+							idx += 1
 					response += "You can see more details about the project by typing: `!projects <number>`."
 				else:
 					choice = re.match(r"\d+", content[1])
 					if choice is not None:
 						try:
-							title = list(self.projects)[int(choice.group(0)) - 1]
-							response = f"**{title}**\n {self.projects[title]}"
+							title, description = self.flatprojects[int(choice.group(0))]
+							response = f"**{title}**\n {description}"
 						except IndexError:
 							response = "Invalid project number was entered."
 					else:
