@@ -31,6 +31,8 @@ class goodbot(object):
 				for title in self.projects[key]:
 					self.flatprojects[idx] = (title, self.projects[key][title])
 					idx += 1
+		with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
+			self.config = json.load(file)
 		self.questions = list(question for question in self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.greetings = self.replies["greetings"]
@@ -255,6 +257,16 @@ class goodbot(object):
 					"to": destination,
 					"topic": topic,
 					"content": f"{greeting} {response}"
+				})
+			elif content[0].lower() == "!contact":
+				response = ""
+				for admin, email in self.config["orgadmins"].items():
+					response += f"@_**{admin}** {email}\n"
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{greeting} Here you go :point_down:\n{response}"
 				})
 			elif "goodbot" in content and content[0] != "!help":
 				self.client.send_message({
