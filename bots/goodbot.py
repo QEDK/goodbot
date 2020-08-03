@@ -241,7 +241,7 @@ class goodbot(object):
 						for title in self.projects[key]:
 							response += f"{idx}. {title}\n"
 							idx += 1
-					response += "You can see more details about the project by typing: `!projects <number>`."
+					response += f"{self.replies['projectdetails']}"
 				else:
 					choice = re.match(r"\d+", content[1])
 					if choice is not None:
@@ -249,9 +249,9 @@ class goodbot(object):
 							title, description = self.flatprojects[int(choice.group(0))]
 							response = f"**{title}**\n {description}"
 						except IndexError:
-							response = "Invalid project number was entered."
+							response = f"{self.replies['invalidproject']}"
 					else:
-						response = "You can see more details about the project by typing: `!projects <number>`."
+						response = f"{self.replies['projectdetails']}"
 				self.client.send_message({
 					"type": message_type,
 					"to": destination,
