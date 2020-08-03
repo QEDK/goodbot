@@ -248,7 +248,7 @@ class goodbot(object):
 						try:
 							title, description = self.flatprojects[int(choice.group(0))]
 							response = f"**{title}**\n {description}"
-						except IndexError:
+						except KeyError:
 							response = f"{self.replies['invalidproject']}"
 					else:
 						response = f"{self.replies['projectdetails']}"
