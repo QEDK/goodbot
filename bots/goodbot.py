@@ -268,6 +268,16 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{greeting} Here you go :point_down:\n{response}"
 				})
+			elif content[0].lower() == "!ping":
+				response = ""
+				for admin, email in self.config["orgadmins"].items():
+					response += f"@**{admin}** "
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{response} Need some help! :point_up:"
+				})
 			elif "goodbot" in content and content[0] != "!help":
 				self.client.send_message({
 					"type": message_type,
