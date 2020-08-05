@@ -1,4 +1,4 @@
-# goodbot [![Build Status](https://travis-ci.com/QEDK/goodbot.svg?branch=master)](https://travis-ci.com/QEDK/goodbot)
+# goodbot [![Build Status](https://travis-ci.com/QEDK/goodbot.svg?branch=master)](https://travis-ci.com/QEDK/goodbot) ![CodeQL](https://github.com/QEDK/goodbot/workflows/CodeQL/badge.svg)
 A chat(help)bot for Wikimedia Zulipchat.
 
 ## Directory guide
