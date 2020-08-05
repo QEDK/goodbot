@@ -13,8 +13,8 @@ from requests import Session
 
 def scan(session):
 	projects = {}
-	with open(str(Path(__file__).parents[1].joinpath("config", "pages.json")), "r") as file:
-		ideapages = json.load(file)
+	with open(str(Path(__file__).parents[1].joinpath("config", "config.json")), "r") as file:
+		ideapages = json.load(file)["ideas"]
 	for key in ideapages:
 		projects[key] = {}
 		i = 0
