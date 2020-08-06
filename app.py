@@ -5,4 +5,8 @@ app = Flask(__name__)
 @app.route('/deploy', methods=['POST'])
 def respond():
 	print(request.json)
-    return Response(status=200)
+	return Response(status=200)
+
+@app.route('/')
+def index():
+	return "Hello world"
