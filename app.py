@@ -1,10 +1,10 @@
 from flask import Flask, request, Response
-import subprocess
+from subprocess import check_output
 
 app = Flask(__name__)
 
 
-@app.route('/deploy', methods=['POST'])
+@app.route("deploy", methods=["POST"])
 def respond():
 	content = request.get_json(silent=True)
 	try:
@@ -15,6 +15,6 @@ def respond():
 	return Response(status=200)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-	return subprocess.run("kubectl get pods")
+	return check_output("kubectl get pods").decode("utf-8")
