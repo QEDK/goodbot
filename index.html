@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src='https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+	<script>
+		$(document).ready(function(){
+			$("#content").load("https://k8s-status.toolforge.org/namespaces/tool-goodbot");
+		});
+	</script>
+</head>
+<body>
+	<div id="content"></div>
+</body>
+</html>

@@ -1,5 +1,4 @@
-from flask import Flask, request, Response
-from subprocess import check_output
+from flask import Flask, Response, request, send_from_directory
 
 app = Flask(__name__)
 
@@ -17,4 +16,4 @@ def respond():
 
 @app.route("/")
 def index():
-	return check_output("kubectl get pods").decode("utf-8")
+	return send_from_directory("", "index.html")
