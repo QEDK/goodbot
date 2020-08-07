@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src='https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-	<script>
-		$(document).ready(function(){
-			$("#content").load("https://k8s-status.toolforge.org/namespaces/tool-goodbot");
-		});
-	</script>
+	<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.5.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/5.14.0/css/all.min.css" crossorigin="anonymous">
 </head>
 <body>
-	<div id="content"></div>
+	<div class="text-center container-fluid">
+		<div class="jumbotron jumbotron-fluid">
+			<div class="container-fluid">
+				<h1 class="display-4">goodbot</h1>
+				<p class="lead">A chatbot for Wikimedia Zulipchat.</p>
+			</div>
+		</div>
+		<div class="text-center btn-group-vertical">
+			<button type="button" class="btn btn-outline-info btn-lg"><i class="fas fa-history"></i>  Status</button>
+			<button type="button" class="btn btn-outline-info btn-lg"><i class="fab fa-github"></i>  Repository</button>
+			<button type="button" class="btn btn-outline-info btn-lg"><i class="fas fa-envelope-open"></i>  Contact</button>
+			<button type="button" class="btn btn-outline-dark btn-lg disabled"><i class="fas fa-info-circle"></i>  Licensed under MIT and LGPLv3.</button>
+		</div>
+	</div>
 </body>
 </html>
