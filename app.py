@@ -4,7 +4,7 @@ from subprocess import check_output
 app = Flask(__name__)
 
 
-@app.route("deploy", methods=["POST"])
+@app.route("/deploy", methods=["POST"])
 def respond():
 	content = request.get_json(silent=True)
 	try:
