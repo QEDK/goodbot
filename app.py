@@ -1,6 +1,14 @@
 from flask import Flask, Response, request, send_from_directory
+from flask_talisman import Talisman
 
 app = Flask(__name__)
+csp = {
+	"default-src": "'self'",
+	"style-src": ["'self'", "https://tools-static.wmflabs.org"],
+	"font-src": "https://tools-static.wmflabs.org",
+	"script-src": "*.toolforge.org"
+}
+talisman = Talisman(app, content_security_policy=csp)
 
 
 @app.route("/deploy", methods=["POST"])
