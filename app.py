@@ -9,7 +9,7 @@ csp = {
 	"style-src": "https://tools-static.wmflabs.org",
 	"font-src": "https://tools-static.wmflabs.org"
 }
-talisman = Talisman(app, content_security_policy=csp, force_https=False)
+talisman = Talisman(app, content_security_policy=csp, force_https=False, content_security_policy_nonce_in=["style-src", "script-src"])
 try:
 	config.load_kube_config()
 except Exception as e:  # to pass tests in non-Kubernetes context
