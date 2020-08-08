@@ -20,7 +20,6 @@ script:
   - nosetests
 notifications:
   webhooks:
-    if: branch = master
     urls:
       - http://goodbot.toolforge.org/deploy
     on_success: always
