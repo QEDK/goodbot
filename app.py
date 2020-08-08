@@ -23,18 +23,18 @@ def respond():
 	try:
 		if content is not None and request.headers.get("Travis-Repo-Slug") == "QEDK/goodbot":
 			api_response = apps_v1.delete_namespaced_deployment(
-				name="goodbot.goodbot", namespace="default", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
+				name="goodbot.goodbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
 			print("Deployment deleted. status='%s'" % str(api_response.status))
 			with open("/data/project/ircpod.yaml") as f:
 				dep = yaml.safe_load(f)
-				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="goodbot")
+				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="tool-goodbot")
 				print("Deployment created. status='%s'" % resp.metadata.name)
 			api_response = apps_v1.delete_namespaced_deployment(
-				name="goodbot.ircbot", namespace="default", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
+				name="goodbot.ircbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
 			print("Deployment deleted. status='%s'" % str(api_response.status))
 			with open("/data/project/goodpod.yaml") as f:
 				dep = yaml.safe_load(f)
-				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="goodbot")
+				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="tool-goodbot")
 				print("Deployment created. status='%s'" % resp.metadata.name)
 	except KeyError:
 		pass
