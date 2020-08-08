@@ -18,3 +18,11 @@ script:
   - flake8 --ignore=W191,E117,E501 bots
   - flake8 --ignore=W191,E117,E501 app.py
   - nosetests
+notifications:
+  webhooks:
+    if: branch = master
+    urls:
+      - http://goodbot.toolforge.org/deploy
+    on_success: always
+    on_cancel:  never
+    on_error:   never
