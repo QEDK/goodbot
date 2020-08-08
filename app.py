@@ -1,9 +1,9 @@
-from flask import Flask, Response, request, send_from_directory
+from flask import Flask, Response, render_template, request
 from flask_talisman import Talisman
 from kubernetes import client, config
 import yaml
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="")
 csp = {
 	"default-src": "'self'",
 	"style-src": "https://tools-static.wmflabs.org",
@@ -43,7 +43,7 @@ def respond():
 
 @app.route("/")
 def index():
-	return send_from_directory("", "index.html")
+	return render_template("index.html")
 
 
 if __name__ == "__main__":
