@@ -21,7 +21,7 @@ script:
 notifications:
   webhooks:
     urls:
-      - http://goodbot.toolforge.org/deploy
+      - https://goodbot.toolforge.org/deploy
     on_success: always
     on_cancel:  never
     on_error:   never
