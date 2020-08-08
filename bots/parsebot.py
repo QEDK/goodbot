@@ -49,11 +49,7 @@ def scan(session):
 		return True
 
 
-def commit(first):
-	if first:
-		commands = ["git pull origin", "git checkout -b parsebot"]
-		for cmd in commands:
-			subprocess.run(shlex.split(cmd))
+def commit():
 	commands = ["git add templates/projects.json", "git commit -m \"Update projects.json\"", "git push origin parsebot"]
 	for cmd in commands:
 		subprocess.run(shlex.split(cmd))
@@ -65,21 +61,26 @@ def make_pull():
 
 
 def monitor(session, repo, pull):
+	flag = True
 	if repo.get_pull(pull.number).state == "closed":
 		subprocess.run(shlex.split("git push origin -d parsebot"))
-		return False
+		flag = False
 	if scan(session):
-		commit(first=False)
-	return True
+		commit()
+	return flag
 
 
 def main():
 	session = Session()
+	commands = ["git pull origin", "git checkout parsebot"]
+	for cmd in commands:
+		subprocess.run(shlex.split(cmd))
 	if scan(session):
-		commit(first=True)
+		commit()
 		repo, pull = make_pull()
 		while monitor(session, repo, pull):
 			time.sleep(60)
+	subprocess.run(shlex.split("git checkout master"))
 	exit(0)
 
 
