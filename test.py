@@ -57,7 +57,7 @@ class test_flask():
 	def test_index_status_code(self):
 		# sends HTTP GET request to the application
 		# on the specified path
-		result = self.app.get('/')
+		result = self.app.get("/")
 
 		# assert the status code of the response
 		eq_(result.status_code, 200)
@@ -65,7 +65,7 @@ class test_flask():
 	def test_deploy_post(self):
 		# sends HTTP request to the application
 		# on the specified path
-		result = self.app.post('/deploy')
+		result = self.app.post("/deploy")
 
 		# assert the response data
 		eq_(result.status_code, 200)
