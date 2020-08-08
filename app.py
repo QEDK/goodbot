@@ -6,13 +6,14 @@ import yaml
 app = Flask(__name__)
 csp = {
 	"default-src": "'self'",
-	"style-src": "https://tools-static.wmflabs.org"
+	"style-src": "https://tools-static.wmflabs.org",
+	"font-src": "https://tools-static.wmflabs.org"
 }
 talisman = Talisman(app, content_security_policy=csp, force_https=False)
 try:
 	config.load_kube_config()
-except Exception:  # to pass tests in non-Kubernetes context
-	pass
+except Exception as e:  # to pass tests in non-Kubernetes context
+	print(e)
 apps_v1 = client.AppsV1Api()
 
 
