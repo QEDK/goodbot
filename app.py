@@ -20,7 +20,7 @@ apps_v1 = client.AppsV1Api()
 def respond():
 	content = request.get_json(silent=True)
 	try:
-		if content is not None and content["successful"]:
+		if content is not None and request.headers.get("Travis-Repo-Slug") == "QEDK/goodbot":
 			api_response = apps_v1.delete_namespaced_deployment(
 				name="goodbot.goodbot", namespace="default", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
 			print("Deployment deleted. status='%s'" % str(api_response.status))
