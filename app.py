@@ -19,7 +19,7 @@ try:
 except Exception as e:  # to pass tests in non-Kubernetes context
 	app.logger.info(e)
 apps_v1 = client.AppsV1Api()
-app.logger.info("Client loaded")
+app.logger.info("Client loaded...")
 
 
 @app.route("/deploy", methods=["POST"])
