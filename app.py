@@ -31,14 +31,14 @@ def respond():
 			api_response = apps_v1.delete_namespaced_deployment(
 				name="goodbot.goodbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
 			app.logger.info("Deployment deleted. status='%s'" % str(api_response.status))
-			with open("/data/project/ircpod.yaml") as f:
+			with open("/data/project/goodbot/goodpod.yaml") as f:
 				dep = yaml.safe_load(f)
 				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="tool-goodbot")
 				app.logger.info("Deployment created. status='%s'" % resp.metadata.name)
 			api_response = apps_v1.delete_namespaced_deployment(
 				name="goodbot.ircbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
 			app.logger.info("Deployment deleted. status='%s'" % str(api_response.status))
-			with open("/data/project/goodpod.yaml") as f:
+			with open("/data/project/goodbot/ircpod.yaml") as f:
 				dep = yaml.safe_load(f)
 				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="tool-goodbot")
 				app.logger.info("Deployment created. status='%s'" % resp.metadata.name)
