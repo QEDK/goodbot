@@ -6,6 +6,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__, template_folder="")
+app.config.update({"ENV": "development", "DEBUG": True})
 csp = {
 	"default-src": "'self'",
 	"style-src": ["'self'", "https://tools-static.wmflabs.org"],
@@ -52,4 +53,4 @@ def index():
 
 
 if __name__ == "__main__":
-	app.run(ssl_context="adhoc")
+	app.run(ssl_context="adhoc", debug=True)
