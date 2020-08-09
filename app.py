@@ -7,6 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__, template_folder="")
+app.config.update({"ENV": "development", "DEBUG": True})
 csp = {
 	"default-src": "'self'",
 	"style-src": ["'self'", "https://tools-static.wmflabs.org"],
@@ -23,8 +24,8 @@ app.logger.info("Client loaded...")
 
 @app.route("/deploy", methods=["POST"])
 def respond():
+	app.logger.info(f"{str(request)} request")
 	content = request.get_json(force=True)
-	app.logger.info(f"{str(content)} received")
 	try:
 		if content is not None and request.headers.get("Travis-Repo-Slug") == "QEDK/goodbot":
 			app.logger.info("Starting deployment...")
@@ -54,4 +55,4 @@ def index():
 
 
 if __name__ == "__main__":
-	app.run(ssl_context="adhoc")
+	app.run(ssl_context="adhoc", debug=True)
