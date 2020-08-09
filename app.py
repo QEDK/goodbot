@@ -26,8 +26,11 @@ app.logger.info("Client loaded...")
 def respond():
 	app.logger.info(f"{str(request)} request")
 	content = request.get_json(force=True)
+	app.logger.info(f"{str(content)} request")
+
 	try:
-		if content["check_suite"]["head_branch"] == "dev" and content["check_suite"]["conclusion"] == "success" and content["app"]["slug"] == "travis-ci":
+		check = content["check_suite"]
+		if check["head_branch"] == "dev" and check["conclusion"] == "success" and check["app"]["slug"] == "travis-ci":
 			app.logger.info("Starting deployment...")
 			api_response = apps_v1.delete_namespaced_deployment(
 				name="goodbot.goodbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=1))
