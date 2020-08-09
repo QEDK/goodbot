@@ -27,7 +27,7 @@ def respond():
 	app.logger.info(f"{str(request)} request")
 	content = request.get_json(force=True)
 	try:
-		if content is not None and request.headers.get("Travis-Repo-Slug") == "QEDK/goodbot":
+		if content["head_branch"] == "dev" and content["conclusion"] == "success":
 			app.logger.info("Starting deployment...")
 			api_response = apps_v1.delete_namespaced_deployment(
 				name="goodbot.goodbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=1))
