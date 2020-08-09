@@ -2,6 +2,7 @@ from flask import Flask, Response, render_template, request
 from flask_talisman import Talisman
 from kubernetes import client, config
 import yaml
+import time
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -29,15 +30,16 @@ def respond():
 		if content is not None and request.headers.get("Travis-Repo-Slug") == "QEDK/goodbot":
 			app.logger.info("Starting deployment...")
 			api_response = apps_v1.delete_namespaced_deployment(
-				name="goodbot.goodbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
+				name="goodbot.goodbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=1))
 			app.logger.info("Deployment deleted. status='%s'" % str(api_response.status))
+			api_response = apps_v1.delete_namespaced_deployment(
+				name="goodbot.ircbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=1))
+			app.logger.info("Deployment deleted. status='%s'" % str(api_response.status))
+			time.sleep(60)
 			with open("/data/project/goodbot/goodpod.yaml") as f:
 				dep = yaml.safe_load(f)
 				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="tool-goodbot")
 				app.logger.info("Deployment created. status='%s'" % resp.metadata.name)
-			api_response = apps_v1.delete_namespaced_deployment(
-				name="goodbot.ircbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=0))
-			app.logger.info("Deployment deleted. status='%s'" % str(api_response.status))
 			with open("/data/project/goodbot/ircpod.yaml") as f:
 				dep = yaml.safe_load(f)
 				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="tool-goodbot")
