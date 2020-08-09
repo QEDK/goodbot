@@ -23,7 +23,7 @@ app.logger.info("Client loaded")
 
 @app.route("/deploy", methods=["POST"])
 def respond():
-	content = request.get_json(silent=True)
+	content = request.get_json(force=True)
 	app.logger.info(f"{str(content)} received")
 	try:
 		if content is not None and request.headers.get("Travis-Repo-Slug") == "QEDK/goodbot":
