@@ -1,5 +1,6 @@
 import subprocess
 from nose.tools import eq_, ok_
+from app import app
 import os
 import signal
 
@@ -33,3 +34,46 @@ def test_irc():
 	ok_("Connected to IRC server" in outs, "Could not connect to IRC server")
 	ok_("Joined IRC channel" in outs, "Could not join IRC channel")
 	ok_("Connected to Zulip" in outs, "Could not connect to Zulip")
+
+
+class test_flask():
+	@classmethod
+	def setUpClass(cls):
+		pass
+
+	@classmethod
+	def tearDownClass(cls):
+		pass
+
+	def setUp(self):
+		# creates a test client
+		self.app = app.test_client()
+		# propagate the exceptions to the test client
+		self.app.testing = True
+
+	def tearDown(self):
+		pass
+
+	def test_index_status_code(self):
+		# sends HTTP GET request to the application
+		# on the specified path
+		result = self.app.get("/")
+
+		# assert the status code of the response
+		eq_(result.status_code, 200)
+
+	def test_bad_deploy_post(self):
+		# sends HTTP request to the application
+		# on the specified path
+		result = self.app.post("/deploy")
+
+		# assert the response data
+		eq_(result.status_code, 400)
+
+	def test_good_deploy_post(self):
+		# sends HTTP request to the application
+		# on the specified path
+		result = self.app.post("/deploy", data="{}")
+
+		# assert the response data
+		eq_(result.status_code, 200)

@@ -12,8 +12,9 @@ before_install:
   - echo -e "[irc]\nserver=irc.freenode.net\nnickname=zuliptestbot\nchannel=#wikimedia-bots-testing\nnickserv_password=$IRC_PASSWORD\nstream=technical-support\ntopic=General" >> ~/ircbot
 install:
   - pip3 install flake8
-  - pip3 install nose
   - pip3 install -r requirements.txt
+  - pip3 install -r requirements-web.txt
 script:
-  - flake8 --ignore=W191,E117,E501 --show-source bots
+  - flake8 --ignore=W191,E117,E501 bots
+  - flake8 --ignore=W191,E117,E501 app.py
   - nosetests
