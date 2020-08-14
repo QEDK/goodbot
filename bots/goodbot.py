@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-import zulip
-import wikipedia
-from stackapi import StackAPI
 import configparser
+import json
+import os
+import random
+import re
+import shlex
+import subprocess
+import wikipedia
+import zulip
+from stackapi import StackAPI
 from rapidfuzz import fuzz
 from rapidfuzz import process as fuzzproc
 from pathlib import Path
-import random
-import json
-import re
-import os
 
 
 class goodbot(object):
@@ -286,9 +288,18 @@ class goodbot(object):
 							self.config[key] = value
 						except Exception as e:
 							response = e
+						response = "Configuration updated successfully."
+					elif content[1].lower() == "commit":
+						with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
+							json.dump(self.config, file, indent="\t")
+						cmds = ["git add config/config.json", f"git commit -m {content[2]}", "git push origin"]
+						for cmd in cmds:
+							subprocess.run(shlex.split(cmd))
+						response = "Committed to repository."
 					elif content[1].lower() == "reset":
 						with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
 							self.config = json.load(file)
+						response = "Configuration reset successfully."
 				self.client.send_message({
 					"type": message_type,
 					"to": destination,
