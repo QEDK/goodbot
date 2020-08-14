@@ -213,7 +213,7 @@ class goodbot(object):
 						"content": f"{greeting} {self.replies['chathelp']}"
 					})
 					return
-				if(content[1].lower() == "wikimedia"):
+				if content[1].lower() == "wikimedia":
 					self.subscribe_user("technical-support", sender_email)
 					self.client.send_message({
 						"type": message_type,
@@ -221,7 +221,7 @@ class goodbot(object):
 						"topic": topic,
 						"content": f"{greeting} {self.replies['wikimedia']}"
 					})
-				if(content[1].lower() == "mediawiki"):
+				if content[1].lower() == "mediawiki":
 					self.subscribe_user("technical-support", sender_email)
 					self.client.send_message({
 						"type": message_type,
@@ -277,6 +277,20 @@ class goodbot(object):
 					"to": destination,
 					"topic": topic,
 					"content": f"{response} Need some help! :point_up:"
+				})
+			elif content[0].lower() == "!config":
+				if sender_email not in self.config["botadmins"]:
+					response = "You are not authorized to make this action."
+				else:
+					if len(content) == 1:
+						response = "Type `!config view` to see current configuration variables.\nType `!config update <key>` to modify variables.\nType `!config save <commit message>` to commit changes to repository."
+					elif content[1].lower() == "view":
+						response = f"```python\n{self.config}```"
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{response}"
 				})
 			elif "goodbot" in content and content[0] != "!help":
 				self.client.send_message({
