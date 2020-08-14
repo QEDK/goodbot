@@ -205,30 +205,22 @@ class goodbot(object):
 					"content": f"{greeting} Got it! :point_down:\n{response}"
 				})
 			elif content[0].lower() == "!chat":
-				if(len(content) == 1):
-					self.client.send_message({
-						"type": message_type,
-						"to": destination,
-						"topic": topic,
-						"content": f"{greeting} {self.replies['chathelp']}"
-					})
-					return
-				if content[1].lower() == "wikimedia":
-					self.subscribe_user("technical-support", sender_email)
-					self.client.send_message({
-						"type": message_type,
-						"to": destination,
-						"topic": topic,
-						"content": f"{greeting} {self.replies['wikimedia']}"
-					})
-				if content[1].lower() == "mediawiki":
-					self.subscribe_user("technical-support", sender_email)
-					self.client.send_message({
-						"type": message_type,
-						"to": destination,
-						"topic": topic,
-						"content": f"{greeting} {self.replies['mediawiki']}"
-					})
+				response = self.replies["chathelp"]
+				self.subscribe_user("technical-support", sender_email)
+				try:
+					if content[1].lower() == "wikimedia":
+						response = self.replies["wikimedia"]
+					elif content[1].lower() == "mediawiki":
+						response = self.replies["mediawiki"]
+				except Exception:
+					pass
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{greeting} {response}"
+				})
+
 			elif content[0].lower() == "!projects":
 				if len(content) == 1:
 					response = "Here's the list of projects:\n"
@@ -283,9 +275,20 @@ class goodbot(object):
 					response = "You are not authorized to make this action."
 				else:
 					if len(content) == 1:
-						response = "Type `!config view` to see current configuration variables.\nType `!config update <key>` to modify variables.\nType `!config save <commit message>` to commit changes to repository."
+						response = "Type `!config view` to see current configuration variables.\nType `!config update <key> <value>` to modify variables.\nType `!config commit <commit message>` to commit changes to repository."
 					elif content[1].lower() == "view":
-						response = f"```python\n{self.config}```"
+						response = f"```json\n{json.dumps(self.config, indent=2)}\n```"
+					elif content[1].lower() == "update":
+						try:
+							key, value = content[2], content[3]
+							if key not in self.config:
+								raise Exception("Key does not exist.")
+							self.config[key] = value
+						except Exception as e:
+							response = e
+					elif content[1].lower() == "reset":
+						with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
+							self.config = json.load(file)
 				self.client.send_message({
 					"type": message_type,
 					"to": destination,
