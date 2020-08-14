@@ -1,5 +1,14 @@
 {
-	"ideas": {"gsocideas": "Google Summer of Code/2020/Ideas for projects", "outreachyideas": "Outreachy/Round 20/Ideas for projects"},
-	"orgadmins": {"Srishti Sethi": "Email: ssethi@wikimedia.org", "Pavithra Eswaramoorthy": "Email: pavithraes@outlook.com"},
-	"botadmins": ["1994constant@gmail.com", "alangiderick@gmail.com", "bansal.medha@gmail.com", "pavithraes@outlook.com", "ssethi@wikimedia.org"]
+	"ideas": "",
+	"orgadmins": {
+		"Srishti Sethi": "Email: ssethi@wikimedia.org",
+		"Pavithra Eswaramoorthy": "Email: pavithraes@outlook.com"
+	},
+	"botadmins": [
+		"1994constant@gmail.com",
+		"alangiderick@gmail.com",
+		"bansal.medha@gmail.com",
+		"pavithraes@outlook.com",
+		"ssethi@wikimedia.org"
+	]
 }
