@@ -275,12 +275,12 @@ class goodbot(object):
 					response = "You are not authorized to make this action."
 				else:
 					if len(content) == 1:
-						response = "Type `!config view` to see current configuration variables.\nType `!config update <key> <value>` to modify variables.\nType `!config commit <commit message>` to commit changes to repository."
+						response = "Type `!config view` to see current configuration variables.\nType `!config update <key>:<value>` to modify variables.\nType `!config commit <commit message>` to commit changes to repository."
 					elif content[1].lower() == "view":
 						response = f"```json\n{json.dumps(self.config, indent=2)}\n```"
 					elif content[1].lower() == "update":
 						try:
-							key, value = content[2], content[3]
+							key, value = content[2].split(":")
 							if key not in self.config:
 								raise Exception("Key does not exist.")
 							self.config[key] = value
