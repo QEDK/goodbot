@@ -4,11 +4,15 @@ import configparser
 import functools
 import irc.bot
 import irc.strings
+import itertools
 import multiprocessing as mp
 import os
+import random
 import re
+import sched
+import time
 import zulip
-from irc.bot import ExponentialBackoff
+from irc.bot import ReconnectStrategy
 from irc.client import ip_numstr_to_quad, Event, ServerConnection
 from irc.client_aio import AioReactor
 from typing import Any, Dict
@@ -16,6 +20,40 @@ from typing import Any, Dict
 
 class IRCBot(irc.bot.SingleServerIRCBot):
 	reactor_class = AioReactor
+
+	class ExponentialBackoff(ReconnectStrategy):
+		min_interval = 1
+		max_interval = 1800
+
+		def __init__(self, **attrs):
+			vars(self).update(attrs)
+			assert 0 <= self.min_interval <= self.max_interval
+			self._check_scheduled = False
+			self.attempt_count = itertools.count(1)
+
+		def run(self, bot):
+			self.bot = bot
+
+			if self._check_scheduled:
+				return
+
+			interval = 2 ** next(self.attempt_count) - 1
+
+			interval = min(interval, self.max_interval)
+
+			interval = int(interval * random.random())
+
+			interval = max(interval, self.min_interval)
+
+			time.sleep(interval)
+			self.check()
+			self._check_scheduled = True
+
+		def check(self):
+			self._check_scheduled = False
+			if not self.bot.connection.is_connected():
+				self.run(self.bot)
+				self.bot.connect()
 
 	def __init__(self, config_file):
 		# type: (Any, str) -> None
@@ -35,7 +73,7 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		self.zulip_client = zulip.Client(config_file=config_file)
 		irc.bot.SingleServerIRCBot.__init__(
 			self, [(self.server, self.port)], self.nickname, self.realname,
-			recon=ExponentialBackoff(min_interval=self.min_interval, max_interval=self.max_interval, run=self)
+			recon=self.ExponentialBackoff(min_interval=self.min_interval, max_interval=self.max_interval)
 		)
 
 	def connect(self, *args, **kwargs):
@@ -51,6 +89,11 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		# type: (ServerConnection, Event) -> None
 		c.join(self.channel)
 		print("Joined IRC channel")
+
+		s = sched.scheduler()
+		pinger = functools.partial(self.connection.ping, "keep-alive")
+		s.enterabs(60, 0, pinger)
+		s.run(blocking=False)
 
 		markdownfmt = re.compile(r"(_?\*\*|\|\d*\*\*|`{3,}\n)")
 		replyfmt = re.compile(r"@.*\[said\].*```quote\n", flags=re.DOTALL)
