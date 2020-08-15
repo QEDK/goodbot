@@ -90,10 +90,13 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		c.join(self.channel)
 		print("Joined IRC channel")
 
-		s = sched.scheduler()
-		pinger = functools.partial(self.connection.ping, "keep-alive")
-		s.enterabs(60, 0, pinger)
-		s.run(blocking=False)
+		def keepalive():
+			s = sched.scheduler()
+			s.enterabs(60, 0, functools.partial(self.connection.ping, "keep-alive"))
+			s.run()
+
+		proc = mp.Process(target=keepalive)
+		proc.start()
 
 		markdownfmt = re.compile(r"(_?\*\*|\|\d*\*\*|`{3,}\n)")
 		replyfmt = re.compile(r"@.*\[said\].*```quote\n", flags=re.DOTALL)
@@ -123,6 +126,17 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		proc.start()
 		if proc.is_alive():
 			print("Connected to Zulip")
+
+	def on_ctcp(self, c, e):
+		# type: (ServerConnection, Event) -> None
+		nick = e.source.nick
+		if e.arguments[0] == "VERSION":
+			c.ctcp_reply(nick, "VERSION " + self.get_version())
+		elif e.arguments[0] == "PING":
+			if len(e.arguments) > 1:
+				c.ctcp_reply(nick, "PONG " + e.arguments[1])
+		elif e.arguments[0] == "DCC" and e.arguments[1].split(" ", 1)[0] == "CHAT":
+			self.on_dccchat(c, e)
 
 	def on_privmsg(self, c, e):
 		# type: (ServerConnection, Event) -> None
