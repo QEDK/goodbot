@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import asyncio
 import configparser
+import functools
 import irc.bot
 import irc.strings
 import multiprocessing as mp
@@ -25,13 +26,17 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 		self.port = config.getint("port", 6667)  # type: int
 		self.nickname = config.get("nickname")  # type: str
 		self.realname = config.get("realname", self.nickname)  # type: str
-		self.min_interval = config.getint("min_interval", 0)  # type: int
+		self.min_interval = config.getint("min_interval", 1)  # type: int
+		self.max_interval = config.getint("max_interval", 1800)  # type: int
 		self.channel = config.get("channel")  # type: irc.bot.Channel
 		self.password = config.get("nickserv_password")  # type: str
 		self.stream = config.get("stream")  # type: str
 		self.topic = config.get("topic", "IRC")  # type: str
 		self.zulip_client = zulip.Client(config_file=config_file)
-		irc.bot.SingleServerIRCBot.__init__(self, [(self.server, self.port)], self.nickname, self.realname, recon=ExponentialBackoff(min_interval=self.min_interval))
+		irc.bot.SingleServerIRCBot.__init__(
+			self, [(self.server, self.port)], self.nickname, self.realname,
+			recon=ExponentialBackoff(min_interval=self.min_interval, max_interval=self.max_interval, run=self)
+		)
 
 	def connect(self, *args, **kwargs):
 		# type: (*Any, **Any) -> None
