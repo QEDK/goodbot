@@ -273,33 +273,43 @@ class goodbot(object):
 					"content": f"{response} Need some help! :point_up:"
 				})
 			elif content[0].lower() == "!config":
+				response = self.replies["confighelp"]
 				if sender_email not in self.config["botadmins"]:
 					response = "You are not authorized to make this action."
 				else:
-					if len(content) == 1:
-						response = "Type `!config view` to see current configuration variables.\nType `!config update <key>:<value>` to modify variables.\nType `!config commit <commit message>` to commit changes to repository."
-					elif content[1].lower() == "view":
-						response = f"```json\n{json.dumps(self.config, indent=2)}\n```"
-					elif content[1].lower() == "update":
-						try:
+					try:
+						if content[1].lower() == "view":
+							response = f"```json\n{json.dumps(self.config, indent=2)}\n```"
+						elif content[1].lower() == "update":
 							key, value = content[2].split(":")
-							if key not in self.config:
-								raise Exception("Key does not exist.")
-							self.config[key] = value
-						except Exception as e:
-							response = e
-						response = "Configuration updated successfully."
-					elif content[1].lower() == "commit":
-						with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
-							json.dump(self.config, file, indent="\t")
-						cmds = ["git add config/config.json", f"git commit -m {content[2]}", "git push origin"]
-						for cmd in cmds:
-							subprocess.run(shlex.split(cmd))
-						response = "Committed to repository."
-					elif content[1].lower() == "reset":
-						with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
-							self.config = json.load(file)
-						response = "Configuration reset successfully."
+							if key in self.config:
+								try:
+									copy = self.config.copy()
+									copy[key] = value
+									json.loads(copy)
+									self.config[key] = value
+									response = "Configuration updated successfully."
+								except ValueError:
+									response = "Input is not valid JSON."
+							else:
+								response = "Key does not exist in configuration."
+						elif content[1].lower() == "commit":
+							cmds = [
+								"git add config/config.json",
+								f"git commit -m {content[2]} --author={sender_full_name} <{sender_email}>",
+								"git push origin"
+							]
+							with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
+								json.dump(self.config, file, indent="\t")
+							for cmd in cmds:
+								subprocess.run(shlex.split(cmd))
+							response = "Committed to repository."
+						elif content[1].lower() == "reset":
+							with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
+								self.config = json.load(file)
+							response = "Configuration reset successfully."
+					except Exception:
+						pass
 				self.client.send_message({
 					"type": message_type,
 					"to": destination,
