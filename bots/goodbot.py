@@ -281,23 +281,23 @@ class goodbot(object):
 						if content[1].lower() == "view":
 							response = f"```json\n{json.dumps(self.config, indent=2)}\n```"
 						elif content[1].lower() == "update":
-							key, value = content[2].split(":")
+							key, value = content[2].split(":", maxsplit=1)
 							if key in self.config:
 								try:
 									copy = self.config.copy()
-									copy[key] = value
-									json.loads(copy)
-									self.config[key] = value
+									copy[key] = json.loads(value)
+									json.loads(json.dumps(copy))
+									self.config[key] = json.loads(value)
 									response = "Configuration updated successfully."
-								except ValueError:
-									response = "Input is not valid JSON."
+								except Exception as e:
+									response = f"Input is not valid JSON. {e}"
 							else:
 								response = "Key does not exist in configuration."
 						elif content[1].lower() == "commit":
 							cmds = [
 								"git add config/config.json",
-								f"git commit -m {content[2]} --author={sender_full_name} <{sender_email}>",
-								"git push origin"
+								f"git commit -m {content[2]} --author={sender_email}",
+								"git push origin --dry-run"
 							]
 							with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
 								json.dump(self.config, file, indent="\t")
