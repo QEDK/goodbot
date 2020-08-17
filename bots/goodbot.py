@@ -93,10 +93,7 @@ class goodbot(object):
 					"content": f"{greeting} {self.replies['helptext']}"
 				})
 
-			keywords = {"!help": help, "@**goodbot**": help}
-			keywords[content[0].lower()]()
-
-			if content[0].lower() == "!gsoc":
+			def gsoc():
 				page = self.config["pages"]["gsoc"]
 				stream = self.config["streams"]["gsoc"]
 				self.client.send_message({
@@ -106,7 +103,8 @@ class goodbot(object):
 					"content": f"{greeting} test {self.replies['gsoc'].format(page=page, stream=stream)}"
 				})
 				self.subscribe_user(stream, sender_email)
-			elif content[0].lower() == "!gsod":
+
+			def gsod():
 				page = self.config["pages"]["gsod"]
 				stream = self.config["streams"]["gsod"]
 				self.client.send_message({
@@ -116,7 +114,8 @@ class goodbot(object):
 					"content": f"{greeting} test {self.replies['gsod'].format(page=page, stream=stream)}"
 				})
 				self.subscribe_user(stream, sender_email)
-			elif content[0].lower() == "!outreachy":
+
+			def outreachy():
 				page = self.config["pages"]["outreachy"]
 				stream = self.config["streams"]["outreachy"]
 				self.client.send_message({
@@ -126,7 +125,8 @@ class goodbot(object):
 					"content": f"{greeting} test {self.replies['outreachy'].format(page=page, stream=stream)}"
 				})
 				self.subscribe_user(stream, sender_email)
-			elif content[0].lower() == "!faq":
+
+			def faq():
 				if(len(content) == 1):
 					self.client.send_message({
 						"type": message_type,
@@ -145,7 +145,8 @@ class goodbot(object):
 						"to": destination,
 						"content": f"{greeting} {lookup}"
 					})
-			elif content[0].lower() == "!wikipedia":
+
+			def wikisearch():
 				if(len(content) == 1):
 					self.client.send_message({
 						"type": message_type,
@@ -177,7 +178,8 @@ class goodbot(object):
 					"to": destination,
 					"content": response
 				})
-			elif content[0].lower() == "!stackoverflow":
+
+			def stackoverflowsearch():
 				if(len(content) == 1):
 					self.client.send_message({
 						"type": message_type,
@@ -211,7 +213,8 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{greeting} Got it! :point_down:\n{response}"
 				})
-			elif content[0].lower() == "!chat":
+
+			def chat():
 				response = self.replies["chathelp"]
 				self.subscribe_user("technical-support", sender_email)
 				try:
@@ -228,7 +231,7 @@ class goodbot(object):
 					"content": f"{greeting} {response}"
 				})
 
-			elif content[0].lower() == "!projects":
+			def projects():
 				if len(content) == 1:
 					response = "Here's the list of projects:\n"
 					idx = 1
@@ -257,7 +260,8 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{greeting} {response}"
 				})
-			elif content[0].lower() == "!contact":
+
+			def contact():
 				response = ""
 				for admin, email in self.config["orgadmins"].items():
 					response += f"@_**{admin}** {email}\n"
@@ -267,7 +271,8 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{greeting} Here you go :point_down:\n{response}"
 				})
-			elif content[0].lower() == "!ping":
+
+			def ping():
 				response = ""
 				for admin, email in self.config["orgadmins"].items():
 					response += f"@**{admin}** "
@@ -277,7 +282,8 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{response} Need some help! :point_up:"
 				})
-			elif content[0].lower() == "!config":
+
+			def config():
 				response = self.replies["confighelp"]
 				if sender_email not in self.config["botadmins"]:
 					response = "You are not authorized to make this action."
@@ -321,17 +327,24 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{response}"
 				})
-			elif "goodbot" in content and content[0] != "!help":
+
+			if "goodbot" in content and content[0].lower() != "!help":
 				self.client.send_message({
 					"type": message_type,
 					"to": destination,
 					"topic": topic,
 					"content": f"{greeting} :blush: What can I do for you today?"
 				})
-			else:
-				return
-		except Exception as e:
-			print(e)
+
+			keywords = {
+				"!help": help, "@**goodbot**": help, "!gsoc": gsoc, "!gsod": gsod, "!outreachy": outreachy, "!faq": faq,
+				"!wikipedia": wikisearch, "!stackoverflow": stackoverflowsearch, "!chat": chat, "!projects": projects,
+				"!contact": contact, "!ping": ping, "!config": config
+			}
+			keywords[content[0].lower()]()
+
+		except Exception:
+			pass
 
 
 def main():
