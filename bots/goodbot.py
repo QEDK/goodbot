@@ -85,45 +85,47 @@ class goodbot(object):
 					"content": f"{self.replies['welcome']}"
 				})
 
-			if content[0].lower() == "!help" or content[0] == "@**goodbot**":
-				if(len(content) == 1):
-					self.client.send_message({
-						"type": message_type,
-						"topic": topic,
-						"to": destination,
-						"content": f"{greeting} {self.replies['helptext']}"
-					})
-				elif(len(content) > 1):
-					content = content[1:]
-					content[0] = f"!{content[0]}"
+			def help():
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} {self.replies['helptext']}"
+				})
+
+			keywords = {"!help": help, "@**goodbot**": help}
+			keywords[content[0].lower()]()
 
 			if content[0].lower() == "!gsoc":
-				stream = self.config["streams"]["outreachy"]
-				self.subscribe_user(stream, sender_email)
+				page = self.config["pages"]["gsoc"]
+				stream = self.config["streams"]["gsoc"]
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['gsoc'].format(stream)}"
+					"content": f"{greeting} test {self.replies['gsoc'].format(page=page, stream=stream)}"
 				})
+				self.subscribe_user(stream, sender_email)
 			elif content[0].lower() == "!gsod":
-				stream = self.config["streams"]["outreachy"]
-				self.subscribe_user(stream, sender_email)
+				page = self.config["pages"]["gsod"]
+				stream = self.config["streams"]["gsod"]
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['gsod'].format(stream)}"
+					"content": f"{greeting} test {self.replies['gsod'].format(page=page, stream=stream)}"
 				})
+				self.subscribe_user(stream, sender_email)
 			elif content[0].lower() == "!outreachy":
+				page = self.config["pages"]["outreachy"]
 				stream = self.config["streams"]["outreachy"]
-				self.subscribe_user(stream, sender_email)
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['outreachy'].format(stream)}"
+					"content": f"{greeting} test {self.replies['outreachy'].format(page=page, stream=stream)}"
 				})
+				self.subscribe_user(stream, sender_email)
 			elif content[0].lower() == "!faq":
 				if(len(content) == 1):
 					self.client.send_message({
