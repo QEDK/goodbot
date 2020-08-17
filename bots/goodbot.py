@@ -127,12 +127,12 @@ class goodbot(object):
 				self.subscribe_user(stream, sender_email)
 
 			def faq():
-				if(len(content) == 1):
+				if len(content) == 1:
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can ask me a question by adding the question after the command: `!help faq 'your question'`"
+						"content": f"{greeting} You can ask me a question by adding the question after the command: `!faq 'your question'`"
 					})
 					return
 				lookup = self.fuzzymatch(" ".join(content[2:]))
@@ -147,12 +147,12 @@ class goodbot(object):
 					})
 
 			def wikisearch():
-				if(len(content) == 1):
+				if len(content) == 1:
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can make me search Wikipedia by adding the query after the command: `!help wikipedia 'your query'`"
+						"content": f"{greeting} You can make me search Wikipedia by adding the query after the command: `!wikipedia 'your query'`"
 					})
 					return
 				self.client.send_message({
@@ -180,12 +180,12 @@ class goodbot(object):
 				})
 
 			def stackoverflowsearch():
-				if(len(content) == 1):
+				if len(content) == 1:
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can make me search StackOverflow by adding the query after the command: `!help stackoverflow 'your query'`"
+						"content": f"{greeting} You can make me search StackOverflow by adding the query after the command: `!stackoverflow 'your query'`"
 					})
 					return
 				self.client.send_message({
@@ -218,10 +218,7 @@ class goodbot(object):
 				response = self.replies["chathelp"]
 				self.subscribe_user("technical-support", sender_email)
 				try:
-					if content[1].lower() == "wikimedia":
-						response = self.replies["wikimedia"]
-					elif content[1].lower() == "mediawiki":
-						response = self.replies["mediawiki"]
+					response = self.replies[content[1].lower()]
 				except Exception:
 					pass
 				self.client.send_message({
