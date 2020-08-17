@@ -98,28 +98,31 @@ class goodbot(object):
 					content[0] = f"!{content[0]}"
 
 			if content[0].lower() == "!gsoc":
-				self.subscribe_user(self.config["streams"]["gsoc"], sender_email)
+				stream = self.config["streams"]["outreachy"]
+				self.subscribe_user(stream, sender_email)
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['gsoc']}"
+					"content": f"{greeting} {self.replies['gsoc'].format(stream)}"
 				})
 			elif content[0].lower() == "!gsod":
-				self.subscribe_user(self.config["streams"]["gsod"], sender_email)
+				stream = self.config["streams"]["outreachy"]
+				self.subscribe_user(stream, sender_email)
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['gsod']}"
+					"content": f"{greeting} {self.replies['gsod'].format(stream)}"
 				})
 			elif content[0].lower() == "!outreachy":
-				self.subscribe_user(self.config["streams"]["outreachy"], sender_email)
+				stream = self.config["streams"]["outreachy"]
+				self.subscribe_user(stream, sender_email)
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['outreachy']}"
+					"content": f"{greeting} {self.replies['outreachy'].format(stream)}"
 				})
 			elif content[0].lower() == "!faq":
 				if(len(content) == 1):
