@@ -98,7 +98,7 @@ class goodbot(object):
 					content[0] = f"!{content[0]}"
 
 			if content[0].lower() == "!gsoc":
-				self.subscribe_user("gsoc20-outreachy20", sender_email)
+				self.subscribe_user(self.config["streams"]["gsoc"], sender_email)
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
@@ -106,7 +106,7 @@ class goodbot(object):
 					"content": f"{greeting} {self.replies['gsoc']}"
 				})
 			elif content[0].lower() == "!gsod":
-				self.subscribe_user("gsod20", sender_email)
+				self.subscribe_user(self.config["streams"]["gsod"], sender_email)
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
@@ -114,7 +114,7 @@ class goodbot(object):
 					"content": f"{greeting} {self.replies['gsod']}"
 				})
 			elif content[0].lower() == "!outreachy":
-				self.subscribe_user("gsoc20-outreachy20", sender_email)
+				self.subscribe_user(self.config["streams"]["outreachy"], sender_email)
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
@@ -187,7 +187,7 @@ class goodbot(object):
 					"to": destination,
 					"content": f"{greeting} {self.replies['wait']}"
 				})
-				query = ' '.join(content[1:])
+				query = " ".join(content[1:])
 				stackoverflow = StackAPI('stackoverflow')
 				stackoverflow.page_size = 3  # lesser, the faster
 				stackoverflow.max_pages = 1  # will hit API only once
