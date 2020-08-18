@@ -100,7 +100,7 @@ class goodbot(object):
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} test {self.replies['gsoc'].format(page=page, stream=stream)}"
+					"content": f"{greeting} {self.replies['gsoc'].format(page=page, stream=stream)}"
 				})
 				self.subscribe_user(stream, sender_email)
 
@@ -111,7 +111,7 @@ class goodbot(object):
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} test {self.replies['gsod'].format(page=page, stream=stream)}"
+					"content": f"{greeting} {self.replies['gsod'].format(page=page, stream=stream)}"
 				})
 				self.subscribe_user(stream, sender_email)
 
@@ -122,7 +122,7 @@ class goodbot(object):
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} test {self.replies['outreachy'].format(page=page, stream=stream)}"
+					"content": f"{greeting} {self.replies['outreachy'].format(page=page, stream=stream)}"
 				})
 				self.subscribe_user(stream, sender_email)
 
@@ -334,9 +334,19 @@ class goodbot(object):
 				})
 
 			keywords = {
-				"!help": help, "@**goodbot**": help, "!gsoc": gsoc, "!gsod": gsod, "!outreachy": outreachy, "!faq": faq,
-				"!wikipedia": wikisearch, "!stackoverflow": stackoverflowsearch, "!chat": chat, "!projects": projects,
-				"!contact": contact, "!ping": ping, "!config": config
+				"@**goodbot**": help,
+				"!chat": chat,
+				"!config": config,
+				"!contact": contact,
+				"!faq": faq,
+				"!gsoc": gsoc,
+				"!gsod": gsod,
+				"!help": help,
+				"!outreachy": outreachy,
+				"!ping": ping,
+				"!projects": projects,
+				"!stackoverflow": stackoverflowsearch,
+				"!wikipedia": wikisearch
 			}
 			keywords[content[0].lower()]()
 
