@@ -1,8 +1,9 @@
+import time
+import yaml
 from flask import Flask, Response, render_template, request
 from flask_talisman import Talisman
 from kubernetes import client, config
-import yaml
-import time
+from github import Github
 
 app = Flask(__name__, template_folder="")
 csp = {
@@ -25,7 +26,8 @@ def respond():
 	app.logger.info(f"{str(content)} request")
 	try:
 		check = content["check_suite"]
-		if check["head_branch"] == "master" and check["conclusion"] == "success" and check["app"]["slug"] == "travis-ci":
+		sha = Github().get_repo("QEDK/goodbot").get_branch("master").commit.sha
+		if check["head_sha"] == sha and check["conclusion"] == "success" and check["app"]["slug"] == "travis-ci":
 			app.logger.info("Starting deployment...")
 			api_response = apps_v1.delete_namespaced_deployment(
 				name="goodbot.goodbot", namespace="tool-goodbot", body=client.V1DeleteOptions(propagation_policy="Foreground", grace_period_seconds=1))
