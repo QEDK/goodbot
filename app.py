@@ -1,3 +1,5 @@
+import hmac
+import hashlib
 import time
 import yaml
 from flask import Flask, Response, render_template, request
@@ -13,6 +15,7 @@ csp = {
 }
 talisman = Talisman(app, content_security_policy=csp, force_https=False, content_security_policy_nonce_in=["style-src"])
 try:
+	app.config.update(yaml.safe_load(open("/data/project/goodbot/secrets.yaml")))
 	config.load_kube_config()
 except Exception as e:  # to pass tests in non-Kubernetes context
 	app.logger.info(e)
@@ -22,6 +25,14 @@ app.logger.info("Client loaded...")
 
 @app.route("/deploy", methods=["POST"])
 def respond():
+	def validate_signature():
+		key = bytes(app.config["webhook_secret"], "utf-8")
+		expected_signature = hmac.new(key=key, msg=request.data, digestmod=hashlib.sha1).hexdigest()
+		incoming_signature = request.headers.get("X-Hub-Signature").split("sha1=")[-1].strip()
+		if not hmac.compare_digest(incoming_signature, expected_signature):
+			return Response(status=400)
+	if app.config.get("webhook_secret"):
+		validate_signature()
 	content = request.get_json(force=True)
 	app.logger.info(f"{str(content)} request")
 	try:
