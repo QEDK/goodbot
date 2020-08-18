@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-import zulip
-import wikipedia
-from stackapi import StackAPI
 import configparser
+import json
+import os
+import random
+import re
+import shlex
+import subprocess
+import wikipedia
+import zulip
+from stackapi import StackAPI
 from rapidfuzz import fuzz
 from rapidfuzz import process as fuzzproc
 from pathlib import Path
-import random
-import json
-import re
-import os
 
 
 class goodbot(object):
@@ -83,49 +85,54 @@ class goodbot(object):
 					"content": f"{self.replies['welcome']}"
 				})
 
-			if content[0].lower() == "!help" or content[0] == "@**goodbot**":
-				if(len(content) == 1):
-					self.client.send_message({
-						"type": message_type,
-						"topic": topic,
-						"to": destination,
-						"content": f"{greeting} {self.replies['helptext']}"
-					})
-				elif(len(content) > 1):
-					content = content[1:]
-					content[0] = f"!{content[0]}"
+			def help():
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} {self.replies['helptext']}"
+				})
 
-			if content[0].lower() == "!gsoc":
-				self.subscribe_user("gsoc20-outreachy20", sender_email)
+			def gsoc():
+				page = self.config["pages"]["gsoc"]
+				stream = self.config["streams"]["gsoc"]
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['gsoc']}"
+					"content": f"{greeting} test {self.replies['gsoc'].format(page=page, stream=stream)}"
 				})
-			elif content[0].lower() == "!gsod":
-				self.subscribe_user("gsod20", sender_email)
+				self.subscribe_user(stream, sender_email)
+
+			def gsod():
+				page = self.config["pages"]["gsod"]
+				stream = self.config["streams"]["gsod"]
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['gsod']}"
+					"content": f"{greeting} test {self.replies['gsod'].format(page=page, stream=stream)}"
 				})
-			elif content[0].lower() == "!outreachy":
-				self.subscribe_user("gsoc20-outreachy20", sender_email)
+				self.subscribe_user(stream, sender_email)
+
+			def outreachy():
+				page = self.config["pages"]["outreachy"]
+				stream = self.config["streams"]["outreachy"]
 				self.client.send_message({
 					"type": message_type,
 					"topic": topic,
 					"to": destination,
-					"content": f"{greeting} {self.replies['outreachy']}"
+					"content": f"{greeting} test {self.replies['outreachy'].format(page=page, stream=stream)}"
 				})
-			elif content[0].lower() == "!faq":
-				if(len(content) == 1):
+				self.subscribe_user(stream, sender_email)
+
+			def faq():
+				if len(content) == 1:
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can ask me a question by adding the question after the command: `!help faq 'your question'`"
+						"content": f"{greeting} You can ask me a question by adding the question after the command: `!faq 'your question'`"
 					})
 					return
 				lookup = self.fuzzymatch(" ".join(content[2:]))
@@ -138,13 +145,14 @@ class goodbot(object):
 						"to": destination,
 						"content": f"{greeting} {lookup}"
 					})
-			elif content[0].lower() == "!wikipedia":
-				if(len(content) == 1):
+
+			def wikisearch():
+				if len(content) == 1:
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can make me search Wikipedia by adding the query after the command: `!help wikipedia 'your query'`"
+						"content": f"{greeting} You can make me search Wikipedia by adding the query after the command: `!wikipedia 'your query'`"
 					})
 					return
 				self.client.send_message({
@@ -170,13 +178,14 @@ class goodbot(object):
 					"to": destination,
 					"content": response
 				})
-			elif content[0].lower() == "!stackoverflow":
-				if(len(content) == 1):
+
+			def stackoverflowsearch():
+				if len(content) == 1:
 					self.client.send_message({
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can make me search StackOverflow by adding the query after the command: `!help stackoverflow 'your query'`"
+						"content": f"{greeting} You can make me search StackOverflow by adding the query after the command: `!stackoverflow 'your query'`"
 					})
 					return
 				self.client.send_message({
@@ -185,7 +194,7 @@ class goodbot(object):
 					"to": destination,
 					"content": f"{greeting} {self.replies['wait']}"
 				})
-				query = ' '.join(content[1:])
+				query = " ".join(content[1:])
 				stackoverflow = StackAPI('stackoverflow')
 				stackoverflow.page_size = 3  # lesser, the faster
 				stackoverflow.max_pages = 1  # will hit API only once
@@ -204,32 +213,22 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{greeting} Got it! :point_down:\n{response}"
 				})
-			elif content[0].lower() == "!chat":
-				if(len(content) == 1):
-					self.client.send_message({
-						"type": message_type,
-						"to": destination,
-						"topic": topic,
-						"content": f"{greeting} {self.replies['chathelp']}"
-					})
-					return
-				if(content[1].lower() == "wikimedia"):
-					self.subscribe_user("technical-support", sender_email)
-					self.client.send_message({
-						"type": message_type,
-						"to": destination,
-						"topic": topic,
-						"content": f"{greeting} {self.replies['wikimedia']}"
-					})
-				if(content[1].lower() == "mediawiki"):
-					self.subscribe_user("technical-support", sender_email)
-					self.client.send_message({
-						"type": message_type,
-						"to": destination,
-						"topic": topic,
-						"content": f"{greeting} {self.replies['mediawiki']}"
-					})
-			elif content[0].lower() == "!projects":
+
+			def chat():
+				response = self.replies["chathelp"]
+				self.subscribe_user("technical-support", sender_email)
+				try:
+					response = self.replies[content[1].lower()]
+				except Exception:
+					pass
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{greeting} {response}"
+				})
+
+			def projects():
 				if len(content) == 1:
 					response = "Here's the list of projects:\n"
 					idx = 1
@@ -258,7 +257,8 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{greeting} {response}"
 				})
-			elif content[0].lower() == "!contact":
+
+			def contact():
 				response = ""
 				for admin, email in self.config["orgadmins"].items():
 					response += f"@_**{admin}** {email}\n"
@@ -268,7 +268,8 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{greeting} Here you go :point_down:\n{response}"
 				})
-			elif content[0].lower() == "!ping":
+
+			def ping():
 				response = ""
 				for admin, email in self.config["orgadmins"].items():
 					response += f"@**{admin}** "
@@ -278,17 +279,69 @@ class goodbot(object):
 					"topic": topic,
 					"content": f"{response} Need some help! :point_up:"
 				})
-			elif "goodbot" in content and content[0] != "!help":
+
+			def config():
+				response = self.replies["confighelp"]
+				if sender_email not in self.config["botadmins"]:
+					response = "You are not authorized to make this action."
+				else:
+					try:
+						if content[1].lower() == "view":
+							response = f"```json\n{json.dumps(self.config, indent=2)}\n```"
+						elif content[1].lower() == "update":
+							key, value = content[2].split(":", maxsplit=1)
+							if key in self.config:
+								try:
+									copy = self.config.copy()
+									copy[key] = json.loads(value)
+									json.loads(json.dumps(copy))
+									self.config[key] = json.loads(value)
+									response = "Configuration updated successfully."
+								except Exception as e:
+									response = f"Input is not valid JSON. {e}"
+							else:
+								response = "Key does not exist in configuration."
+						elif content[1].lower() == "commit":
+							cmds = [
+								"git add config/config.json",
+								f"git commit -m {content[2]} --author={sender_email}",
+								"git push origin --dry-run"
+							]
+							with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
+								json.dump(self.config, file, indent="\t")
+							for cmd in cmds:
+								subprocess.run(shlex.split(cmd))
+							response = "Committed to repository."
+						elif content[1].lower() == "reset":
+							with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
+								self.config = json.load(file)
+							response = "Configuration reset successfully."
+					except Exception:
+						pass
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{response}"
+				})
+
+			if "goodbot" in content and content[0].lower() != "!help":
 				self.client.send_message({
 					"type": message_type,
 					"to": destination,
 					"topic": topic,
 					"content": f"{greeting} :blush: What can I do for you today?"
 				})
-			else:
-				return
-		except Exception as e:
-			print(e)
+
+			keywords = {
+				"!help": help, "@**goodbot**": help, "!gsoc": gsoc, "!gsod": gsod, "!outreachy": outreachy, "!faq": faq,
+				"!wikipedia": wikisearch, "!stackoverflow": stackoverflowsearch, "!chat": chat, "!projects": projects,
+				"!contact": contact, "!ping": ping, "!config": config
+			}
+			keywords[content[0].lower()]()
+
+		except Exception:
+			pass
 
 
 def main():

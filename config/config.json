@@ -1,4 +1,7 @@
 {
 	"ideas": {"gsocideas": "Google Summer of Code/2020/Ideas for projects", "outreachyideas": "Outreachy/Round 20/Ideas for projects"},
-	"orgadmins": {"Srishti Sethi": "Email: ssethi@wikimedia.org", "Pavithra Eswaramoorthy": "Email: pavithraes@outlook.com"}
+	"streams": {"gsoc": "gsoc20-outreachy20", "gsod": "gsod20", "outreachy": "gsoc20-outreachy20"},
+	"pages": {"gsoc": "https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020", "gsod": "https://www.mediawiki.org/wiki/Season_of_Docs/2020", "outreachy": "https://www.mediawiki.org/wiki/Outreachy/Round_20"},
+	"orgadmins": {"Srishti Sethi": "Email: ssethi@wikimedia.org", "Pavithra Eswaramoorthy": "Email: pavithraes@outlook.com"},
+	"botadmins": ["1994constant@gmail.com", "alangiderick@gmail.com", "bansal.medha@gmail.com", "pavithraes@outlook.com", "ssethi@wikimedia.org"]
 }
