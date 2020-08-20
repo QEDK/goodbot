@@ -128,23 +128,17 @@ class goodbot(object):
 
 			def faq():
 				if len(content) == 1:
-					self.client.send_message({
-						"type": message_type,
-						"topic": topic,
-						"to": destination,
-						"content": f"{greeting} You can ask me a question by adding the question after the command: `!faq 'your question'`"
-					})
-					return
-				lookup = self.fuzzymatch(" ".join(content[2:]))
-				if lookup is None:
-					return
+					response = self.replies["faqhelp"]
 				else:
-					self.client.send_message({
-						"type": message_type,
-						"topic": topic,
-						"to": destination,
-						"content": f"{greeting} {lookup}"
-					})
+					response = self.fuzzymatch(" ".join(content[2:]))
+					if response is None:
+						response = self.replies["nomatch"]
+				self.client.send_message({
+					"type": message_type,
+					"topic": topic,
+					"to": destination,
+					"content": f"{greeting} {response}"
+				})
 
 			def wikisearch():
 				if len(content) == 1:
