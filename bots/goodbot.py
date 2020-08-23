@@ -205,7 +205,7 @@ class goodbot(object):
 				try:
 					answerjson = self.stackoverflow.fetch('answers/{ids}', ids=[str(questions['items'][0]['accepted_answer_id'])], filter="!9Z(-wzftf")  # filter code: default+"answer.body_markdown"
 					answer = "\n**Accepted answer:**\n" + answerjson['items'][0]['body_markdown']
-				except IndexError:  # faster than checking if index exists
+				except Exception:  # faster than checking if index exists
 					answer = "\n**No accepted answer found**"
 				response += f"{answer}\nOther questions:\n"
 				response += "\n".join((f"* [{question['title']}]({question['link']})") for question in questions['items'][1:])
