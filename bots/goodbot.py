@@ -38,6 +38,9 @@ class goodbot(object):
 		self.questions = list(question for question in self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.greetings = self.replies["greetings"]
+		self.stackoverflow = StackAPI("stackoverflow")
+		self.stackoverflow.page_size = 3  # lesser, the faster
+		self.stackoverflow.max_pages = 1  # will hit API only once
 		self.subscribe_all()
 		print("Bot init complete")
 
@@ -75,15 +78,23 @@ class goodbot(object):
 
 		try:
 			greeting = f"{random.choice(self.greetings)} @**{sender_full_name}**!"
-			if sender_email == "notification-bot@zulip.com" and topic == "signups":  # hack for reading #announce stream
+			if sender_email == "notification-bot@zulip.com" and topic == "signups":
 				userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"])
-				if userid is None:
-					return
 				self.client.send_message({
 					"type": "private",
 					"to": f"[{userid.group('id')}]",
 					"content": f"{self.replies['welcome']}"
 				})
+				return
+
+			elif "goodbot" in content and not content[0].startswith("!"):
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{greeting} :blush: What can I do for you today?"
+				})
+				return
 
 			def help():
 				self.client.send_message({
@@ -146,7 +157,7 @@ class goodbot(object):
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can make me search Wikipedia by adding the query after the command: `!wikipedia 'your query'`"
+						"content": f"{greeting} {self.replies['wikipediahelp']}"
 					})
 					return
 				self.client.send_message({
@@ -179,7 +190,7 @@ class goodbot(object):
 						"type": message_type,
 						"topic": topic,
 						"to": destination,
-						"content": f"{greeting} You can make me search StackOverflow by adding the query after the command: `!stackoverflow 'your query'`"
+						"content": f"{greeting} {self.replies['stackoverflowhelp']}"
 					})
 					return
 				self.client.send_message({
@@ -189,13 +200,10 @@ class goodbot(object):
 					"content": f"{greeting} {self.replies['wait']}"
 				})
 				query = " ".join(content[1:])
-				stackoverflow = StackAPI('stackoverflow')
-				stackoverflow.page_size = 3  # lesser, the faster
-				stackoverflow.max_pages = 1  # will hit API only once
-				questions = stackoverflow.fetch('search/advanced', sort="relevance", q=query, order="desc", answers=1)
+				questions = self.stackoverflow.fetch('search/advanced', sort="relevance", q=query, order="desc", answers=1)
 				response = f"**Closest match:** {questions['items'][0]['title']}"
 				try:
-					answerjson = stackoverflow.fetch('answers/{ids}', ids=[str(questions['items'][0]['accepted_answer_id'])], filter="!9Z(-wzftf")  # filter code: default+"answer.body_markdown"
+					answerjson = self.stackoverflow.fetch('answers/{ids}', ids=[str(questions['items'][0]['accepted_answer_id'])], filter="!9Z(-wzftf")  # filter code: default+"answer.body_markdown"
 					answer = "\n**Accepted answer:**\n" + answerjson['items'][0]['body_markdown']
 				except IndexError:  # faster than checking if index exists
 					answer = "\n**No accepted answer found**"
@@ -299,7 +307,7 @@ class goodbot(object):
 							cmds = [
 								"git add config/config.json",
 								f"git commit -m {content[2]} --author={sender_email}",
-								"git push origin --dry-run"
+								"git push origin"
 							]
 							with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
 								json.dump(self.config, file, indent="\t")
@@ -317,14 +325,6 @@ class goodbot(object):
 					"to": destination,
 					"topic": topic,
 					"content": f"{response}"
-				})
-
-			if "goodbot" in content and content[0].lower() != "!help":
-				self.client.send_message({
-					"type": message_type,
-					"to": destination,
-					"topic": topic,
-					"content": f"{greeting} :blush: What can I do for you today?"
 				})
 
 			keywords = {
