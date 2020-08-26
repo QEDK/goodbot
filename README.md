@@ -58,7 +58,7 @@ Note the added `[irc]` section. It's also possible to use the same Zulip credent
 ## Running the bots
 The bots are essentially Python scripts at its core, so you would run it as you would run a normal script on your system, for e.g. from the `goodbot` directory:
 ```bash
-python3 bots/goodbot.py
+$ python3 bots/goodbot.py
 ```
 
 ### Running the web app
