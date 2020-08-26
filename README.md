@@ -33,7 +33,7 @@ $ pip3 install -r requirements-web.txt
 
 For running tests (you need to install flake8 beforehand for linting), run these commands inside the `goodbot` directory and it will automatically run the tests for you:
 ```bash
-$ flake8 --ignore=W191,E117,E501 bots # linting, use --show-source to see individual errors
+$ flake8 --ignore=W191,E117,E501 bots
 $ nosetests
 ```
 
