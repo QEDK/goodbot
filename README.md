@@ -55,6 +55,21 @@ topic=topicofstreamtobridge
 ```
 Note the added `[irc]` section. It's also possible to use the same Zulip credentials (bot account basically) for both the bots and use one file.
 
+## Running the bots
+The bots are essentially Python scripts at its core, so you would run it as you would run a normal script on your system, for e.g. from the `goodbot` directory:
+```bash
+python3 bots/goodbot.py
+```
+
+### Running the web app
+The web app requires usual Flask setup like:
+```bash
+$ export FLASK_APP=app.py
+$ flask run
+ * Running on http://127.0.0.1:5000/
+```
+Detailed instructions are available in Flask [docs](https://flask.palletsprojects.com/en/1.1.x/quickstart).
+
 ## Advanced configuration and documentation
 Further documentation exists on the [wiki](https://github.com/QEDK/goodbot/wiki).
 
