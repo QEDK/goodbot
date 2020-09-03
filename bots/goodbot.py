@@ -291,7 +291,7 @@ class goodbot(object):
 						if content[1].lower() == "view":
 							response = f"```json\n{json.dumps(self.config, indent=2)}\n```"
 						elif content[1].lower() == "update":
-							key, value = content[2].split(":", maxsplit=1)
+							key, value = " ".join(content[2:]).split(":", maxsplit=1)
 							if key in self.config:
 								try:
 									copy = self.config.copy()
