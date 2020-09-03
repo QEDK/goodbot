@@ -304,17 +304,21 @@ class goodbot(object):
 							else:
 								response = "Key does not exist in configuration."
 						elif content[1].lower() == "commit":
-							cmds = [
-								"git add config/config.json",
-								f"git commit -m {' '.join(content[2])} --author={sender_email}",
-								"git push origin"
-							]
 							with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
 								json.dump(self.config, file, indent="\t")
+							cmds = [
+								"git add config/config.json",
+								f"git commit -m {' '.join(content[2:])} --author={sender_email}",
+								"git push origin"
+							]
 							for cmd in cmds:
 								subprocess.run(shlex.split(cmd))
 							response = "Committed to repository."
 						elif content[1].lower() == "reset":
+							cmds = [
+								"git pull origin master",
+								"git reset --hard HEAD"
+							]
 							with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
 								self.config = json.load(file)
 							response = "Configuration reset successfully."
