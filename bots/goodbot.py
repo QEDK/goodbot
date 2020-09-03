@@ -319,6 +319,8 @@ class goodbot(object):
 								"git pull origin master",
 								"git reset --hard HEAD"
 							]
+							for cmd in cmds:
+								subprocess.run(shlex.split(cmd))
 							with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
 								self.config = json.load(file)
 							response = "Configuration reset successfully."
