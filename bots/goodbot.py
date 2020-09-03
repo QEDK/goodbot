@@ -306,7 +306,7 @@ class goodbot(object):
 						elif content[1].lower() == "commit":
 							cmds = [
 								"git add config/config.json",
-								f"git commit -m {content[2]} --author={sender_email}",
+								f"git commit -m {' '.join(content[2])} --author={sender_email}",
 								"git push origin"
 							]
 							with open(Path(__file__).parents[1].joinpath("config", "config.json"), "w") as file:
