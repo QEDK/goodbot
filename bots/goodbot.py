@@ -78,23 +78,21 @@ class goodbot(object):
 
 		try:
 			greeting = f"{random.choice(self.greetings)} @**{sender_full_name}**!"
-			if sender_email == "notification-bot@zulip.com" and topic == "signups":
-				userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"])
-				self.client.send_message({
-					"type": "private",
-					"to": f"[{userid.group('id')}]",
-					"content": f"{self.replies['welcome']}"
-				})
-				return
 
-			elif "goodbot" in content and not content[0].startswith("!"):
-				self.client.send_message({
-					"type": message_type,
-					"to": destination,
-					"topic": topic,
-					"content": f"{greeting} :blush: What can I do for you today?"
-				})
-				return
+			def welcome(userid=None):
+				if userid is not None:
+					self.client.send_message({
+						"type": "private",
+						"to": f"[{userid}]",
+						"content": f"{self.replies['welcome']}"
+					})
+				else:
+					self.client.send_message({
+						"type": message_type,
+						"topic": topic,
+						"to": destination,
+						"content": f"{self.replies['welcome']}"
+					})
 
 			def help():
 				self.client.send_message({
@@ -333,6 +331,20 @@ class goodbot(object):
 					"content": f"{response}"
 				})
 
+			if sender_email == "1994constant@gmail.com" and topic == "signups":
+				userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"]).group("id")
+				welcome(userid)
+				return
+
+			elif "goodbot" in content and not content[0].startswith("!"):
+				self.client.send_message({
+					"type": message_type,
+					"to": destination,
+					"topic": topic,
+					"content": f"{greeting} :blush: What can I do for you today?"
+				})
+				return
+
 			keywords = {
 				"@**goodbot**": help,
 				"!chat": chat,
@@ -346,6 +358,7 @@ class goodbot(object):
 				"!ping": ping,
 				"!projects": projects,
 				"!stackoverflow": stackoverflowsearch,
+				"!welcome": welcome,
 				"!wikipedia": wikisearch
 			}
 			keywords[content[0].lower()]()
