@@ -3,6 +3,7 @@ bin/
 lib/
 share/
 include/
+Scripts/
 *.Python
 *.cfg
 __pycache__
