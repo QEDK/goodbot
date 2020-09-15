@@ -158,12 +158,6 @@ class goodbot(object):
 						"content": f"{greeting} {self.replies['wikipediahelp']}"
 					})
 					return
-				self.client.send_message({
-					"type": message_type,
-					"topic": topic,
-					"to": destination,
-					"content": f"{greeting} {self.replies['wait']}"
-				})
 				query = " ".join(content[1:])
 				self.client.send_message({
 					"type": message_type,
@@ -191,12 +185,6 @@ class goodbot(object):
 						"content": f"{greeting} {self.replies['stackoverflowhelp']}"
 					})
 					return
-				self.client.send_message({
-					"type": message_type,
-					"topic": topic,
-					"to": destination,
-					"content": f"{greeting} {self.replies['wait']}"
-				})
 				query = " ".join(content[1:])
 				questions = self.stackoverflow.fetch('search/advanced', sort="relevance", q=query, order="desc", answers=1)
 				response = f"**Closest match:** {questions['items'][0]['title']}"
