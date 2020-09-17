@@ -319,7 +319,7 @@ class goodbot(object):
 					"content": f"{response}"
 				})
 
-			if sender_email == "1994constant@gmail.com" and topic == "signups":
+			if sender_email == "notification-bot@zulip.com" and topic == "signups":
 				userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"]).group("id")
 				welcome(userid)
 				return
