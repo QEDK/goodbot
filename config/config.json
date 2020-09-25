@@ -4,8 +4,8 @@
 		"outreachyideas": "Outreachy/Round 20/Ideas for projects"
 	},
 	"streams": {
-		"gsoc": "gsoc20-outreachy20",
-		"gsod": "gsod20",
+		"gsoc": "general",
+		"gsod": "general",
 		"outreachy": "outreachy21"
 	},
 	"pages": {
