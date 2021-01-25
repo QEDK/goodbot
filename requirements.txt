@@ -22,7 +22,7 @@ pycparser==2.20
 PyGithub==1.54.1
 PyJWT==1.7.1
 pyOpenSSL==20.0.1
-pytz==2020.4
+pytz==2020.5
 rapidfuzz==0.12.3
 requests
 six==1.15.0
