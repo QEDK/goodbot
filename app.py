@@ -1,5 +1,6 @@
 import hmac
 import hashlib
+import logging
 import time
 import yaml
 from flask import Flask, Response, render_template, request
@@ -8,6 +9,7 @@ from kubernetes import client, config
 from github import Github
 
 app = Flask(__name__, template_folder="")
+logging.basicConfig(level=logging.DEBUG)
 csp = {
 	"default-src": "'self'",
 	"style-src": ["'self'", "https://tools-static.wmflabs.org"],
@@ -56,7 +58,7 @@ def respond():
 				resp = apps_v1.create_namespaced_deployment(body=dep, namespace="tool-goodbot")
 				app.logger.info(f"Deployment created. status={resp.metadata.name}")
 	except Exception as e:
-		app.logger.info(e)
+		app.logger.error(e)
 	return Response(status=200)
 
 
