@@ -10,7 +10,7 @@ idna==2.10
 importlib-metadata==2.0.0
 irc==19.0.1
 jaraco.classes==3.1.0
-jaraco.collections==3.0.0
+jaraco.collections==3.1.0
 jaraco.functools==3.0.1
 jaraco.logging==3.1.0
 jaraco.stream==3.0.0
