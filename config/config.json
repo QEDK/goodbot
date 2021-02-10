@@ -4,9 +4,9 @@
 		"outreachyideas": "Outreachy/Round 20/Ideas for projects"
 	},
 	"streams": {
-		"gsoc": "general",
+		"gsoc": "gsoc21-outreachy22",
 		"gsod": "general",
-		"outreachy": "outreachy21"
+		"outreachy": "gsoc21-outreachy22"
 	},
 	"pages": {
 		"gsoc": "https://www.mediawiki.org/wiki/Google_Summer_of_Code/2020",
@@ -16,7 +16,8 @@
 	"orgadmins": {
 		"Srishti Sethi": "Email: ssethi@wikimedia.org",
 		"Pavithra Eswaramoorthy": "Email: pavithraes@outlook.com",
-		"gopavasanth": "Email: gopavasanth1999@gmail.com"
+		"Gopa Vasanth": "Email: gopavasanth1999@gmail.com",
+		"Ankit Maity": "Email: ankitmaity@outlook.com"
 	},
 	"botadmins": [
 		"1994constant@gmail.com",
