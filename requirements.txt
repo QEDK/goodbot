@@ -23,7 +23,7 @@ PyGithub==1.54.1
 PyJWT==2.0.1
 pyOpenSSL==20.0.1
 pytz==2020.5
-rapidfuzz==0.12.3
+rapidfuzz==1.0.0
 requests
 six==1.15.0
 soupsieve==2.1
