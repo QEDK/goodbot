@@ -1,6 +1,6 @@
 beautifulsoup4==4.9.3
 certifi==2020.12.5
-cffi==1.14.4
+cffi==1.14.5
 chardet==4.0.0
 cryptography==3.4.6
 Deprecated==1.2.11
