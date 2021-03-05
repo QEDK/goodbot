@@ -27,7 +27,8 @@ class IRCBot(irc.bot.SingleServerIRCBot):
 
 		def __init__(self, **attrs):
 			vars(self).update(attrs)
-			assert 0 <= self.min_interval <= self.max_interval
+			if not 0 <= self.min_interval <= self.max_interval:
+				raise AssertionError
 			self._check_scheduled = False
 			self.attempt_count = itertools.count(1)
 
