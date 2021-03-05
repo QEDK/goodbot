@@ -35,7 +35,7 @@ class goodbot(object):
 					idx += 1
 		with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
 			self.config = json.load(file)
-		self.questions = [question for question in self.faqs["questions"]]
+		self.questions = list(self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.greetings = self.replies["greetings"]
 		self.stackoverflow = StackAPI("stackoverflow")
