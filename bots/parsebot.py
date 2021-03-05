@@ -5,6 +5,7 @@ import os
 import re
 import shlex
 import subprocess
+import sys
 import time
 from github import Github
 from pathlib import Path
@@ -86,7 +87,7 @@ def main():
 		while monitor(session, repo, pull):
 			time.sleep(60)
 	subprocess.run(shlex.split("git checkout master", "git branch -D parsebot"))
-	exit(0)
+	sys.exit(0)
 
 
 if __name__ == "__main__":
