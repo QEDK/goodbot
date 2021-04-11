@@ -7,7 +7,7 @@ Deprecated==1.2.11
 distro==1.5.0
 html2text==2020.1.16
 idna==3.1
-importlib-metadata==3.4.0
+importlib-metadata==3.10.0
 irc==19.0.1
 jaraco.classes==3.2.1
 jaraco.collections==3.2.0
