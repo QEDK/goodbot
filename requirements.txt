@@ -13,7 +13,7 @@ jaraco.classes==3.2.1
 jaraco.collections==3.2.0
 jaraco.functools==3.3.0
 jaraco.logging==3.1.0
-jaraco.stream==3.0.0
+jaraco.stream==3.0.2
 jaraco.text==3.5.0
 matrix-client==0.3.2
 more-itertools==8.7.0
