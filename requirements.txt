@@ -26,7 +26,7 @@ pytz==2021.1
 rapidfuzz==1.4.1
 requests
 six==1.15.0
-soupsieve==2.2
+soupsieve==2.2.1
 StackAPI==0.2.0
 tempora==4.0.1
 urllib3==1.26.4
