@@ -10,7 +10,7 @@ idna==3.1
 importlib-metadata==3.4.0
 irc==19.0.1
 jaraco.classes==3.2.1
-jaraco.collections==3.3.0
+jaraco.collections==3.4.0
 jaraco.functools==3.3.0
 jaraco.logging==3.1.0
 jaraco.stream==3.0.2
@@ -29,7 +29,7 @@ six==1.15.0
 soupsieve==2.2.1
 StackAPI==0.2.0
 tempora==4.0.1
-urllib3==1.26.4
+urllib3==1.26.6
 wikipedia==1.4.0
 wrapt==1.12.1
 zipp==3.4.1
