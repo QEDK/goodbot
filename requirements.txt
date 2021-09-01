@@ -28,7 +28,7 @@ requests
 six==1.16.0
 soupsieve==2.2.1
 StackAPI==0.2.0
-tempora==4.0.1
+tempora==4.1.1
 urllib3==1.26.6
 wikipedia==1.4.0
 wrapt==1.12.1
