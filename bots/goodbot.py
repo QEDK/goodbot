@@ -223,7 +223,7 @@ class goodbot(object):
 					"to": destination,
 					"topic": topic,
 					"content": f"{greeting} \
-					{self.replies["projects"].format(gsoc=ideas["gsocideas"], outreachy=ideas["outreachyideas"])}"
+					{self.replies['projects'].format(gsoc=ideas['gsocideas'], outreachy=ideas['outreachyideas'])}"
 				})
 
 			def contact():
