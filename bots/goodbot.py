@@ -217,33 +217,13 @@ class goodbot(object):
 				})
 
 			def projects():
-				if len(content) == 1:
-					response = "Here's the list of projects:\n"
-					idx = 1
-					for key in self.projects:
-						if key == "gsocideas":
-							response += "**Google Summer of Code -**\n"
-						else:
-							response += "**Outreachy -**\n"
-						for title in self.projects[key]:
-							response += f"{idx}. {title}\n"
-							idx += 1
-					response += f"{self.replies['projectdetails']}"
-				else:
-					choice = re.match(r"\d+", content[1])
-					if choice is not None:
-						try:
-							title, description = self.flatprojects[int(choice.group(0))]
-							response = f"**{title}**\n {description}"
-						except KeyError:
-							response = f"{self.replies['invalidproject']}"
-					else:
-						response = f"{self.replies['projectdetails']}"
+				ideas = self.config["ideas"]
 				self.client.send_message({
 					"type": message_type,
 					"to": destination,
 					"topic": topic,
-					"content": f"{greeting} {response}"
+					"content": f"{greeting} \
+					{self.replies["projects"].format(gsoc=ideas["gsocideas"], outreachy=ideas["outreachyideas"])}"
 				})
 
 			def contact():

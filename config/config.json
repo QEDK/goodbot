@@ -1,17 +1,17 @@
 {
 	"ideas": {
-		"gsocideas": "Google Summer of Code/2021/Ideas for projects",
-		"outreachyideas": "Outreachy/Round 21/Ideas for projects"
+		"gsocideas": "https://www.mediawiki.org/wiki/Google_Summer_of_Code/2022#Ideas_for_projects",
+		"outreachyideas": "https://www.mediawiki.org/wiki/Outreachy/Round_24#Ideas_for_projects"
 	},
 	"streams": {
-		"gsoc": "gsoc21-outreachy22",
+		"gsoc": "gsoc22-outreachy24",
 		"gsod": "general",
-		"outreachy": "gsoc21-outreachy22"
+		"outreachy": "gsoc22-outreachy24"
 	},
 	"pages": {
-		"gsoc": "https://www.mediawiki.org/wiki/Google_Summer_of_Code/2021",
+		"gsoc": "https://www.mediawiki.org/wiki/Google_Summer_of_Code/2022",
 		"gsod": "https://www.mediawiki.org/wiki/Season_of_Docs/2020",
-		"outreachy": "https://www.mediawiki.org/wiki/Outreachy/Round_22"
+		"outreachy": "https://www.mediawiki.org/wiki/Outreachy/Round_24"
 	},
 	"orgadmins": {
 		"Srishti Sethi": "Email: ssethi@wikimedia.org",
