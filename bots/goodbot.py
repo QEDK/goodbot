@@ -35,7 +35,7 @@ class goodbot(object):
 					idx += 1
 		with open(Path(__file__).parents[1].joinpath("config", "config.json")) as file:
 			self.config = json.load(file)
-		self.questions = list(question for question in self.faqs["questions"])
+		self.questions = list(self.faqs["questions"])
 		self.answers = self.faqs["answers"]
 		self.greetings = self.replies["greetings"]
 		self.stackoverflow = StackAPI("stackoverflow")
@@ -56,10 +56,9 @@ class goodbot(object):
 	def fuzzymatch(self, faq):
 		answer = fuzzproc.extractOne(faq, self.questions, scorer=fuzz.token_sort_ratio)
 		if answer[1] > 60:
-			print(answer)
-			return self.answers[self.faqs["questions"][answer[0]]]
-		else:
-			return None
+		    print(answer)
+		    return self.answers[self.faqs["questions"][answer[0]]]
+		return None
 
 	def process(self, msg):
 		sender_email = msg["sender_email"]
@@ -300,18 +299,18 @@ class goodbot(object):
 				})
 
 			if sender_email == "notification-bot@zulip.com" and topic == "signups":
-				userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"]).group("id")
-				welcome(userid)
-				return
+			    userid = re.search(r"\|(?P<id>\d+)\*\*", msg["content"]).group("id")
+			    welcome(userid)
+			    return
 
-			elif "goodbot" in content and not content[0].startswith("!"):
-				self.client.send_message({
-					"type": message_type,
-					"to": destination,
-					"topic": topic,
-					"content": f"{greeting} :blush: What can I do for you today?"
-				})
-				return
+			if "goodbot" in content and not content[0].startswith("!"):
+			    self.client.send_message({
+			    	"type": message_type,
+			    	"to": destination,
+			    	"topic": topic,
+			    	"content": f"{greeting} :blush: What can I do for you today?"
+			    })
+			    return
 
 			keywords = {
 				"@**goodbot**": help,
